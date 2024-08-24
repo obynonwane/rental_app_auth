@@ -14,7 +14,7 @@ import { entities } from "./entities"
                 port: configService.get('DATABASE_PORT'),
                 username: configService.get('DATABASE_USER'),
                 password: configService.get('DATABASE_PASSWORD'),
-                database: configService.get('DATABASE_DB'),
+                database: configService.get('DATABASE_NAME'),
                 entities: entities,
                 autoLoadEntities: true,
             })

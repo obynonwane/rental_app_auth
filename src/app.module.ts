@@ -25,7 +25,7 @@ import { UtilitiesModule } from './utilities/utilities.module';
         DATABASE_PORT: Joi.number().required(),
         DATABASE_USER: Joi.string().required(),
         DATABASE_PASSWORD: Joi.string().required(),
-        DATABASE_DB: Joi.string().required(),
+        DATABASE_NAME: Joi.string().required(),
         PORT: Joi.number(),
         JWT_SECRET: Joi.string().required(),
         JWT_VERIFICATION_TOKEN_EXPIRATION_TIME: Joi.string().required(),
