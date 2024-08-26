@@ -1,10 +1,11 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Injectable, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Injectable, Post, Query, Req, Res, UseFilters, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthenticationService } from './authentication.service';
 import CreateUserDto from 'src/_dtos/create-user.dto';
 import { LocalAuthenticationGuard } from './local-authentication.guard';
 import RequestWithUser from './request-with-user.interface';
 import JwtAuthenticationGuard from './jwt-authentication.guard';
+import { JwtExceptionFilter } from './jwt-exception.filter';
 //
 @Controller('authentication')
 @Injectable()
@@ -41,6 +42,7 @@ export class AuthenticationController {
     }
 
     @UseGuards(JwtAuthenticationGuard)
+    @UseFilters(JwtExceptionFilter)
     @Get('get-me')
     async getUserDetail(@Req() request: RequestWithUser, @Res() response: Response) {
 
@@ -58,6 +60,7 @@ export class AuthenticationController {
     }
 
     @UseGuards(JwtAuthenticationGuard)
+    @UseFilters(JwtExceptionFilter)
     @Get('verify-token')
     async authenticate(@Req() request: RequestWithUser, @Res() response: Response) {
 
