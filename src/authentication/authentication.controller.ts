@@ -1,11 +1,12 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Injectable, Post, Query, Req, Res, UseFilters, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthenticationService } from './authentication.service';
-import CreateUserDto from 'src/_dtos/create-user.dto';
+import CreateUserDto from '../_dtos/create-user.dto';
 import { LocalAuthenticationGuard } from './local-authentication.guard';
 import RequestWithUser from './request-with-user.interface';
 import JwtAuthenticationGuard from './jwt-authentication.guard';
 import { JwtExceptionFilter } from './jwt-exception.filter';
+import CreateUserRoleDto from '../_dtos/create-role.dto';
 //
 @Controller('authentication')
 @Injectable()
@@ -77,6 +78,27 @@ export class AuthenticationController {
             });
     }
 
+
+    @HttpCode(200)
+    @UseGuards(JwtAuthenticationGuard)
+    @Post('choose-role')
+    async chooseRole(@Req() request: RequestWithUser, @Body() payload: CreateUserRoleDto, @Res() response: Response) {
+        console.log("this is the payload", payload)
+
+        const { user } = request;
+        const res = await this.authenticationService.chooseRole(payload, user)
+
+        return response.status(HttpStatus.ACCEPTED).json(
+            {
+                error: false,
+                status_code: 200,
+                message: 'role added successfully',
+                data: {
+                    data: res,
+                }
+            });
+    }
+
     @UseGuards(JwtAuthenticationGuard)
     @Post('log-out')
     async logOut(@Req() request: RequestWithUser, @Res() response: Response) {
@@ -97,6 +119,8 @@ export class AuthenticationController {
                 data: data
             });
     }
+
+
 
 }
 

@@ -12,6 +12,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DatabaseModule } from 'database.module';
 import { EmailVerificationTokenModule } from './email-verification-token/email-verification-token.module';
 import { UtilitiesModule } from './utilities/utilities.module';
+import { UserRoleModule } from './user-role/user-role.module';
 
 
 
@@ -37,6 +38,7 @@ import { UtilitiesModule } from './utilities/utilities.module';
     AuthenticationModule,
     EmailVerificationTokenModule,
     UtilitiesModule,
+    UserRoleModule,
   ],
   controllers: [],
   providers: [],

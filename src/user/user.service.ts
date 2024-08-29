@@ -10,6 +10,7 @@ import { PostgresErrorCode } from '../_enums/postgresErrorCodes.enum';
 import { ClientProxy } from '@nestjs/microservices';
 import { EmailVerificationTokenService } from '../email-verification-token/email-verification-token.service';
 import EmailVerificationToken from '../email-verification-token/email-verification-token.entity';
+import CreateUserRoleDto from '../_dtos/create-role.dto';
 
 
 
@@ -119,12 +120,24 @@ export class UserService {
         }
     }
 
-    public async getById(id): Promise<User> {
+    public async getById(id: string): Promise<User> {
         const user = await this.usersRepository.findOne({ where: { id: id } });
         if (user) {
             return user;
         }
         throw new CustomHttpException('user with this id does not exist', HttpStatus.NOT_FOUND, { statusCode: HttpStatus.NOT_FOUND, error: true, });
+
+    }
+
+
+    public async chooseRole(payload: CreateUserRoleDto, user: User) {
+
+        try {
+            // get the role 
+            // then assign the role to user
+        } catch (error) {
+
+        }
 
     }
 }

@@ -5,7 +5,7 @@ import { Column, Entity, Index, PrimaryGeneratedColumn, UpdateDateColumn } from 
 @Entity({ name: "users" })
 class User {
     @PrimaryGeneratedColumn("uuid")
-    public id: number;
+    public id: string;
 
     @Column({ nullable: true })
     public first_name: string;
@@ -29,6 +29,9 @@ class User {
 
     @Column({ default: false })
     public verified: boolean;
+
+    @Column({ default: true })
+    public first_time_login: boolean;
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
     public created_at: Date;

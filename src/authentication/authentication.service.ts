@@ -4,6 +4,8 @@ import CreateUserDto from 'src/_dtos/create-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { TokenPayload } from './token-payload.interface';
+import CreateUserRoleDto from 'src/_dtos/create-role.dto';
+import User from 'src/user/user.entity';
 
 @Injectable()
 export class AuthenticationService {
@@ -14,7 +16,7 @@ export class AuthenticationService {
         private readonly configService: ConfigService
     ) { }
 
-    public getCookieWithJwtToken(userId: number) {
+    public getCookieWithJwtToken(userId: string) {
         const payload: TokenPayload = { userId };
         const token = this.jwtService.sign(payload);
         return token;
@@ -28,12 +30,16 @@ export class AuthenticationService {
         return await this.userService.verifyEmail(token);
     }
 
-    public async getAuthenticatedUser(email, password) {
+    public async getAuthenticatedUser(email: string, password: string) {
         return await this.userService.getByEmail(email, password);
     }
 
     public getCookieForLogOut() {
         return `Authentication=; HttpOnly; Path=/; Max-Age=0`;
+    }
+
+    public async chooseRole(payload: CreateUserRoleDto, user: User) {
+        return await this.userService.chooseRole(payload, user);
     }
 
 }
