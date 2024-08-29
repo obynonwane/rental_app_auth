@@ -1,6 +1,7 @@
 
+import Role from "src/role/role.entity";
 import { UserType } from "../_enums/user-type.enum";
-import { Column, Entity, Index, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, Entity, Index, JoinTable, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity({ name: "users" })
 class User {
@@ -21,9 +22,6 @@ class User {
     @Column()
     public phone: string;
 
-    // @Column({ type: 'enum', enum: UserType, default: UserType.OWNER, })
-    // public userType: UserType;
-
     @Column()
     public password: string;
 
@@ -32,6 +30,15 @@ class User {
 
     @Column({ default: true })
     public first_time_login: boolean;
+
+
+    @ManyToMany(() => Role, role => role.users, { cascade: true })
+    @JoinTable({
+        name: 'user_roles',
+        joinColumn: { name: 'user_id', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'role_id', referencedColumnName: 'id' }
+    })
+    public roles: Role[];
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
     public created_at: Date;

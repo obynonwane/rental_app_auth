@@ -11,6 +11,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { EmailVerificationTokenService } from '../email-verification-token/email-verification-token.service';
 import EmailVerificationToken from '../email-verification-token/email-verification-token.entity';
 import CreateUserRoleDto from '../_dtos/create-role.dto';
+import Role from '../role/role.entity';
 
 
 
@@ -24,7 +25,10 @@ export class UserService {
         private rabbitClient: ClientProxy,
 
         @InjectRepository(User)
-        private usersRepository: Repository<User>,
+        private userRepository: Repository<User>,
+
+        @InjectRepository(Role)
+        private roleRepository: Repository<Role>,
 
         private emailVerificationTokenService: EmailVerificationTokenService,
 
@@ -32,7 +36,7 @@ export class UserService {
 
     public async getByEmail(email: string, password: string) {
         try {
-            const user = await this.usersRepository.findOne({ where: { email: email } });
+            const user = await this.userRepository.findOne({ where: { email: email } });
             await this.verifyPassword(password, user.password);
             user.password = undefined;
 
@@ -64,14 +68,14 @@ export class UserService {
     public async create(userData: CreateUserDto) {
         try {
 
-            const newUser = this.usersRepository.create({
+            const newUser = this.userRepository.create({
                 first_name: userData.first_name,
                 last_name: userData.last_name,
                 email: userData.email,
                 phone: userData.phone,
                 password: await this.createPasswordHash(userData.password)
             });
-            const user = await this.usersRepository.save(newUser);
+            const user = await this.userRepository.save(newUser);
 
             const token = await this.emailVerificationTokenService.createEmailverificationToken(userData.email)
 
@@ -121,7 +125,11 @@ export class UserService {
     }
 
     public async getById(id: string): Promise<User> {
-        const user = await this.usersRepository.findOne({ where: { id: id } });
+        // const user = await this.userRepository.findOne({ where: { id: id } });
+        const user = await this.userRepository.findOne({
+            where: { id: id },
+            relations: ['roles', 'roles.permissions'], // Load roles and permissions
+        });
         if (user) {
             return user;
         }
@@ -130,12 +138,44 @@ export class UserService {
     }
 
 
-    public async chooseRole(payload: CreateUserRoleDto, user: User) {
+    public async chooseRole(payload: CreateUserRoleDto, _user: User): Promise<User> {
 
         try {
+            // get the user
+            const user = await this.userRepository.findOne({
+                where: { id: _user.id },
+                relations: ['roles'],  // Ensure roles are loaded with the user
+            });
+
+            if (!user) {
+                throw new Error('User not found');
+            }
+
+            // Find the role by name
+            const role = await this.roleRepository.findOne({ where: { name: payload.user_type } });
+
+            if (!role) {
+                throw new Error('Role not found');
+            }
+
+            // Check if the user already has the role
+            const hasRole = user.roles.some(existingRole => existingRole.id === role.id);
+
+            if (hasRole) {
+                // throw new Error(`User already has the role: ${role.name}`);
+                throw new CustomHttpException(`User already has the role: ${role.name}`, HttpStatus.INTERNAL_SERVER_ERROR, { statusCode: HttpStatus.INTERNAL_SERVER_ERROR, error: true, });
+
+            }
+
+            // Assign the role to the user
+            user.roles.push(role);
+
+            // Save the updated user entity
+            return await this.userRepository.save(user);
             // get the role 
             // then assign the role to user
         } catch (error) {
+            throw new CustomHttpException('error adding user role', HttpStatus.INTERNAL_SERVER_ERROR, { statusCode: HttpStatus.INTERNAL_SERVER_ERROR, error: true, });
 
         }
 

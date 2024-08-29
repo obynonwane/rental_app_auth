@@ -6,6 +6,8 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { EmailVerificationTokenService } from '../email-verification-token/email-verification-token.service';
 import EmailVerificationToken from '../email-verification-token/email-verification-token.entity';
 import { Utility } from '../utilities/utility';
+import Role from '../role/role.entity';
+import Permission from '../permission/permission.entity';
 
 
 
@@ -25,7 +27,7 @@ import { Utility } from '../utilities/utility';
         },
       },
     ]),
-    TypeOrmModule.forFeature([User, EmailVerificationToken])],
+    TypeOrmModule.forFeature([User, EmailVerificationToken, Role, Permission])],
   providers: [UserService, EmailVerificationTokenService, Utility]
 })
 export class UserModule { }

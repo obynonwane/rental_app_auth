@@ -2,20 +2,16 @@
 
 import { Column, Entity, Index, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
-@Entity({ name: "email_verification_tokens" })
-class EmailVerificationToken {
+@Entity({ name: "user_roles" })
+class UserRole {
     @PrimaryGeneratedColumn("uuid")
     public id: string;
 
-    @Index()
-    @Column({ unique: true })
-    public email: string;
+    @Column({ nullable: false })
+    public user_id: string;
 
-    @Column({ nullable: true })
-    public token: string;
-
-    @Column({ default: false })
-    public expired: boolean;
+    @Column({ nullable: false })
+    public role_id: string;
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
     public created_at: Date;
@@ -24,4 +20,4 @@ class EmailVerificationToken {
     public updated_at: Date;
 }
 
-export default EmailVerificationToken;
+export default UserRole;

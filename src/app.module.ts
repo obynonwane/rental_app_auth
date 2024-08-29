@@ -13,7 +13,8 @@ import { DatabaseModule } from 'database.module';
 import { EmailVerificationTokenModule } from './email-verification-token/email-verification-token.module';
 import { UtilitiesModule } from './utilities/utilities.module';
 import { UserRoleModule } from './user-role/user-role.module';
-
+import { RoleModule } from './role/role.module';
+import { PermissionModule } from './permission/permission.module';
 
 
 
@@ -39,6 +40,8 @@ import { UserRoleModule } from './user-role/user-role.module';
     EmailVerificationTokenModule,
     UtilitiesModule,
     UserRoleModule,
+    RoleModule,
+    PermissionModule,
   ],
   controllers: [],
   providers: [],
