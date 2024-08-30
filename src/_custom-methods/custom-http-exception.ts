@@ -10,6 +10,7 @@ export class CustomHttpException extends HttpException {
 
     getResponse(): object {
         const response = super.getResponse();
+
         if (typeof response === 'string') {
             return {
                 message: response,

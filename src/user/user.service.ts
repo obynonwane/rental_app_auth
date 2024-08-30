@@ -138,46 +138,52 @@ export class UserService {
     }
 
 
-    public async chooseRole(payload: CreateUserRoleDto, _user: User): Promise<User> {
+    public async chooseRole(payload: CreateUserRoleDto, _user: User) {
 
-        try {
-            // get the user
-            const user = await this.userRepository.findOne({
-                where: { id: _user.id },
-                relations: ['roles'],  // Ensure roles are loaded with the user
-            });
 
-            if (!user) {
-                throw new Error('User not found');
-            }
+        // get the user
+        const user = await this.userRepository.findOne({
+            where: { id: _user.id },
+            relations: ['roles'],  // Ensure roles are loaded with the user
+        });
 
-            // Find the role by name
-            const role = await this.roleRepository.findOne({ where: { name: payload.user_type } });
-
-            if (!role) {
-                throw new Error('Role not found');
-            }
-
-            // Check if the user already has the role
-            const hasRole = user.roles.some(existingRole => existingRole.id === role.id);
-
-            if (hasRole) {
-                // throw new Error(`User already has the role: ${role.name}`);
-                throw new CustomHttpException(`User already has the role: ${role.name}`, HttpStatus.INTERNAL_SERVER_ERROR, { statusCode: HttpStatus.INTERNAL_SERVER_ERROR, error: true, });
-
-            }
-
-            // Assign the role to the user
-            user.roles.push(role);
-
-            // Save the updated user entity
-            return await this.userRepository.save(user);
-            // get the role 
-            // then assign the role to user
-        } catch (error) {
-            throw new CustomHttpException('error adding user role', HttpStatus.INTERNAL_SERVER_ERROR, { statusCode: HttpStatus.INTERNAL_SERVER_ERROR, error: true, });
+        if (!user) {
+            // throw new Error('User not found');
+            throw new CustomHttpException(`user not found`, HttpStatus.NOT_FOUND, { statusCode: HttpStatus.NOT_FOUND, error: true, });
 
         }
+
+        // Find the role by name
+        const role = await this.roleRepository.findOne({ where: { name: payload.user_type } });
+
+        if (!role) {
+            // throw new Error('Role not found');
+
+            // throw new Error(`User already has the role: ${role.name}`);
+            throw new CustomHttpException(`role not found`, HttpStatus.NOT_FOUND, { statusCode: HttpStatus.NOT_FOUND, error: true, });
+
+        }
+
+        // Check if the user already has the role
+        const hasRole = user.roles.some(existingRole => existingRole.id === role.id);
+
+        if (hasRole) {
+            // throw new Error(`User already has the role: ${role.name}`);
+            throw new CustomHttpException(`User already has the role: ${role.name}`, HttpStatus.INTERNAL_SERVER_ERROR, { statusCode: HttpStatus.INTERNAL_SERVER_ERROR, error: true, });
+
+        }
+
+        // Assign the role to the user
+        user.roles.push(role);
+
+        // change the first_time_login = false
+        user.first_time_login = false;
+
+        // Save the updated user entity
+        return await this.userRepository.save(user);
+        // get the role 
+        // then assign the role to user
+
 
     }
 }
