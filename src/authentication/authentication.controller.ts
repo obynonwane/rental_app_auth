@@ -34,7 +34,7 @@ export class AuthenticationController {
         return response.status(HttpStatus.ACCEPTED).json(
             {
                 error: false,
-                status_code: 200,
+                statusCode: 200,
                 message: 'logged-in successfully',
                 data: {
                     access_token: token,
@@ -48,16 +48,7 @@ export class AuthenticationController {
     async getUserDetail(@Req() request: RequestWithUser, @Res() response: Response) {
 
         const user = request.user;
-        user.password = undefined;
-        return response.status(HttpStatus.ACCEPTED).json(
-            {
-                error: false,
-                status_code: 200,
-                message: 'user details retrieved succesfully',
-                data: {
-                    user: user
-                }
-            });
+        return response.status(HttpStatus.ACCEPTED).json(user);
     }
 
     @UseGuards(JwtAuthenticationGuard)
@@ -66,16 +57,7 @@ export class AuthenticationController {
     async authenticate(@Req() request: RequestWithUser, @Res() response: Response) {
 
         const user = request.user;
-        user.password = undefined;
-        return response.status(HttpStatus.ACCEPTED).json(
-            {
-                error: false,
-                status_code: 200,
-                message: 'token verified succesfully',
-                data: {
-                    user: user
-                }
-            });
+        return response.status(HttpStatus.ACCEPTED).json(user);
     }
 
 
@@ -91,13 +73,24 @@ export class AuthenticationController {
         return response.status(HttpStatus.ACCEPTED).json(
             {
                 error: false,
-                status_code: 200,
+                statusCode: 200,
                 message: 'role added successfully',
                 data: {
                     data: res,
                 }
             });
     }
+
+    @HttpCode(200)
+    @UseGuards(JwtAuthenticationGuard)
+    @Get('product-owner-permissions')
+    async productOwnerPermission(@Req() request: RequestWithUser, @Res() response: Response) {
+        const { user } = request;
+        const role = await this.authenticationService.productOwnerPermission(user)
+        return response.status(HttpStatus.ACCEPTED).json(role);
+    }
+
+
 
     @UseGuards(JwtAuthenticationGuard)
     @Post('log-out')
@@ -114,7 +107,7 @@ export class AuthenticationController {
         return response.status(status).json(
             {
                 error: data.error,
-                status_code: data.status_code,
+                statusCode: data.status_code,
                 message: data.message,
                 data: data
             });

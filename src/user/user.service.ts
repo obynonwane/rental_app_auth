@@ -12,6 +12,8 @@ import { EmailVerificationTokenService } from '../email-verification-token/email
 import EmailVerificationToken from '../email-verification-token/email-verification-token.entity';
 import CreateUserRoleDto from '../_dtos/create-role.dto';
 import Role from '../role/role.entity';
+import Permission from '../permission/permission.entity';
+import { JsonResponse } from './respose-interface';
 
 
 
@@ -29,6 +31,9 @@ export class UserService {
 
         @InjectRepository(Role)
         private roleRepository: Repository<Role>,
+
+        @InjectRepository(Permission)
+        private permissionRepository: Repository<Permission>,
 
         private emailVerificationTokenService: EmailVerificationTokenService,
 
@@ -124,18 +129,52 @@ export class UserService {
         }
     }
 
-    public async getById(id: string): Promise<User> {
-        // const user = await this.userRepository.findOne({ where: { id: id } });
+    // public async getById(id: string): Promise<User> {
+
+    //     // const user = await this.userRepository.findOne({ where: { id: id } });
+    //     const user = await this.userRepository.findOne({
+    //         where: { id: id },
+    //         relations: ['roles', 'roles.permissions'], // Load roles and permissions
+    //     });
+    //     if (user) {
+
+
+    //         return user;
+    //     }
+    //     throw new CustomHttpException('user with this id does not exist', HttpStatus.NOT_FOUND, { statusCode: HttpStatus.NOT_FOUND, error: true, });
+
+    // }
+
+
+
+    public async getById(id: string) {
+        console.log("this is the method")
+
+        // Retrieve the user from the database, including roles and permissions
         const user = await this.userRepository.findOne({
             where: { id: id },
             relations: ['roles', 'roles.permissions'], // Load roles and permissions
         });
-        if (user) {
-            return user;
-        }
-        throw new CustomHttpException('user with this id does not exist', HttpStatus.NOT_FOUND, { statusCode: HttpStatus.NOT_FOUND, error: true, });
 
+        if (!user) {
+            throw new CustomHttpException('user with this id does not exist', HttpStatus.NOT_FOUND, { statusCode: HttpStatus.NOT_FOUND, error: true });
+        }
+
+        // Extract roles and permissions
+        const roles: string[] = user.roles.map(role => role.name);
+        const permissions: string[] = user.roles.flatMap(role => role.permissions.map(permission => permission.name));
+
+        // Construct the response
+        const response = {
+            user,         // Include the original user object
+            roles,        // Include the extracted roles array
+            permissions,  // Include the extracted permissions array
+        }
+
+        // Return the new response
+        return response;
     }
+
 
 
     public async chooseRole(payload: CreateUserRoleDto, _user: User) {
@@ -185,5 +224,22 @@ export class UserService {
         // then assign the role to user
 
 
+    }
+
+    public async productOwnerPermission(user: User) {
+        const role = await this.roleRepository.findOne({ where: { name: 'product_owner' }, relations: ['permissions'], });
+        // Construct the response
+        const response: JsonResponse = {
+            error: false,
+            message: 'Permissions retrieved succesfully',
+            statusCode: HttpStatus.OK,
+            data: {
+                role,
+            }
+        };
+
+
+        // Return the new response
+        return response;
     }
 }

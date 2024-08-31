@@ -42,4 +42,8 @@ export class AuthenticationService {
         return await this.userService.chooseRole(payload, user);
     }
 
+    public async productOwnerPermission(user: User) {
+        return await this.userService.productOwnerPermission(user);
+    }
+
 }

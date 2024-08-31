@@ -1,10 +1,10 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Repository } from 'typeorm';
 import User from '../../user/user.entity';
-import { JwtPayload } from '../interfaces/jwt-payload.interface';
+import { JsonResponse, JwtPayload } from '../interfaces/jwt-payload.interface';
 import { UserService } from '../../user/user.service';
 import { ConfigService } from '@nestjs/config';
 
@@ -21,7 +21,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: JwtPayload): Promise<User> {
+
+  async validate(payload: JwtPayload): Promise<JsonResponse> {
     const { email } = payload;
 
     // const user: User = await this.userRepository.findOneBy({ email });
@@ -34,6 +35,30 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException();
     }
 
-    return user;
+    // Extract roles and permissions
+    const roles: string[] = user.roles.map(role => role.name);
+    const permissions: string[] = user.roles.flatMap(role => role.permissions.map(permission => permission.name));
+
+    user.roles = undefined;
+    user.password = undefined;
+
+
+    // Construct the response
+    const response: JsonResponse = {
+      error: false,
+      message: 'User details retrieved successfully',
+      statusCode: HttpStatus.OK,
+      data: {
+        user,         // Include the original user object
+        roles,        // Include the extracted roles array
+        permissions,  // Include the extracted permissions array
+      }
+    };
+
+
+    // Return the new response
+    return response;
+
+    // return user;
   }
 }
