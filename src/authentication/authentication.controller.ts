@@ -60,7 +60,6 @@ export class AuthenticationController {
         return response.status(HttpStatus.ACCEPTED).json(user);
     }
 
-
     @HttpCode(200)
     @UseGuards(JwtAuthenticationGuard)
     @Post('choose-role')
@@ -90,14 +89,33 @@ export class AuthenticationController {
         return response.status(HttpStatus.ACCEPTED).json(role);
     }
 
+    @HttpCode(200)
+    @UseGuards(JwtAuthenticationGuard)
+    @Post('product-owner-create-staf')
+    async productOwnerCreateStaff(@Body() userData: CreateUserDto, @Req() request: RequestWithUser, @Res() response: Response) {
 
+
+        const { user } = request;
+        console.log(user)
+        // const role = await this.authenticationService.productOwnerCreateStaff(userData, user)
+
+
+        return response.status(HttpStatus.ACCEPTED).json(
+            {
+                error: false,
+                statusCode: 200,
+                message: 'role added successfully',
+                data: {
+                    data: user,
+                }
+            });
+    }
 
     @UseGuards(JwtAuthenticationGuard)
     @Post('log-out')
     async logOut(@Req() request: RequestWithUser, @Res() response: Response) {
         return response.status(HttpStatus.ACCEPTED).json({ status: true, statusCode: 200, message: 'logged out successfully' });
     }
-
 
     @Get('verify-email')
     async verifyEmail(@Query('token') token: string, @Req() request: RequestWithUser, @Res() response: Response) {

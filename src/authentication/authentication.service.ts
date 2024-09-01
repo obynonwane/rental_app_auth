@@ -25,6 +25,9 @@ export class AuthenticationService {
     async createUser(userData: CreateUserDto) {
         return await this.userService.create(userData)
     }
+    async productOwnerCreateStaff(userData: CreateUserDto, user: User) {
+        return await this.userService.productOwnerCreateStaff(userData)
+    }
 
     public async verifyEmail(token: string): Promise<{ message: string, error: boolean, status_code: number }> {
         return await this.userService.verifyEmail(token);
