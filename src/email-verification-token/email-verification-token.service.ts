@@ -66,4 +66,18 @@ export class EmailVerificationTokenService {
             }
         }
     }
+
+
+    public async sendEmailToStaffForAccountCreation(email: string) {
+        try {
+            const token = this.emailVerificationTokenRepository.create({
+                token: await this.utilities.generateRandomString(),
+                email: email,
+            });
+            return await this.emailVerificationTokenRepository.save(token);
+
+        } catch (error) {
+            throw new InternalServerErrorException(error)
+        }
+    }
 }

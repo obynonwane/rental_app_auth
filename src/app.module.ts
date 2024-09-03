@@ -15,6 +15,7 @@ import { UtilitiesModule } from './utilities/utilities.module';
 import { UserRoleModule } from './user-role/user-role.module';
 import { RoleModule } from './role/role.module';
 import { PermissionModule } from './permission/permission.module';
+import { ProductOwnerStaffModule } from './product-owner-staff/product-owner-staff.module';
 
 
 
@@ -42,6 +43,7 @@ import { PermissionModule } from './permission/permission.module';
     UserRoleModule,
     RoleModule,
     PermissionModule,
+    ProductOwnerStaffModule,
   ],
   controllers: [],
   providers: [],

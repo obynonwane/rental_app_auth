@@ -25,8 +25,8 @@ export class AuthenticationService {
     async createUser(userData: CreateUserDto) {
         return await this.userService.create(userData)
     }
-    async productOwnerCreateStaff(userData: CreateUserDto, user: User) {
-        return await this.userService.productOwnerCreateStaff(userData)
+    async productOwnerCreateStaff(userData: CreateUserDto, user: any) {
+        return await this.userService.productOwnerCreateStaff(userData, user)
     }
 
     public async verifyEmail(token: string): Promise<{ message: string, error: boolean, status_code: number }> {
@@ -41,7 +41,7 @@ export class AuthenticationService {
         return `Authentication=; HttpOnly; Path=/; Max-Age=0`;
     }
 
-    public async chooseRole(payload: CreateUserRoleDto, user: User) {
+    public async chooseRole(payload: CreateUserRoleDto, user: any) {
         return await this.userService.chooseRole(payload, user);
     }
 

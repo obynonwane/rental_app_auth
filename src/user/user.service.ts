@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import User from './user.entity';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import CreateUserDto from '../_dtos/create-user.dto';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcryptjs';
@@ -14,6 +14,11 @@ import CreateUserRoleDto from '../_dtos/create-role.dto';
 import Role from '../role/role.entity';
 import Permission from '../permission/permission.entity';
 import { JsonResponse } from './respose-interface';
+import { UserType, UserTypeArray } from "../_enums/user-type.enum"
+import ProductOwnerStaff from "../product-owner-staff/product-owner-staff.entity"
+
+
+
 
 
 
@@ -34,6 +39,9 @@ export class UserService {
 
         @InjectRepository(Permission)
         private permissionRepository: Repository<Permission>,
+
+        @InjectRepository(ProductOwnerStaff)
+        private productOwnerStaffRepository: Repository<ProductOwnerStaff>,
 
         private emailVerificationTokenService: EmailVerificationTokenService,
 
@@ -160,10 +168,20 @@ export class UserService {
 
 
 
-    public async chooseRole(payload: CreateUserRoleDto, _user: User) {
+    public async chooseRole(payload: CreateUserRoleDto, _user: any) {
 
+        // do type assertion 
+        const selectedType = payload.user_type as UserType
 
-        // get the user
+        // check if the user have role product owner
+        const exists = UserTypeArray.includes(selectedType);
+
+        // throe an exception if the user type is not what was sent
+        if (!exists) {
+            throw new CustomHttpException(`roled select not found`, HttpStatus.BAD_REQUEST, { statusCode: HttpStatus.BAD_REQUEST, error: true, });
+        }
+
+        // get the user making the call
         const user = await this.userRepository.findOne({
             where: { id: _user.id },
             relations: ['roles'],  // Ensure roles are loaded with the user
@@ -203,9 +221,6 @@ export class UserService {
 
         // Save the updated user entity
         return await this.userRepository.save(user);
-        // get the role 
-        // then assign the role to user
-
 
     }
 
@@ -226,51 +241,115 @@ export class UserService {
         return response;
     }
 
+    public async productOwnerCreateStaff(userData: CreateUserDto, _user: any) {
+        // Extract the user roles
+        const userRoles = _user.data.roles;
 
-    public async productOwnerCreateStaff(userData: CreateUserDto) {
-        try {
+        console.log(userRoles)
 
+        // Check if the user has the role 'PRODUCT_OWNER'
+        const isProductOwner = userRoles.includes(UserType.PRODUCT_OWNER);
+
+        if (!isProductOwner) {
+            throw new CustomHttpException(
+                'User does not have permission to create staff',
+                HttpStatus.FORBIDDEN,
+                { statusCode: HttpStatus.FORBIDDEN, error: true }
+            );
+        }
+
+        const entityManager = this.userRepository.manager;
+
+        await entityManager.transaction(async (transactionalEntityManager: EntityManager) => {
+
+            // Check if a user with the same email already exists
+            const existingUser = await transactionalEntityManager.findOne(User, { where: { email: userData.email } });
+            if (existingUser) {
+                throw new CustomHttpException(
+                    'A user with this email already exists',
+                    HttpStatus.CONFLICT,
+                    { statusCode: HttpStatus.BAD_REQUEST, error: true }
+                );
+            }
+
+            // Check if a user with the same phone number already exists
+            const existingUserByPhone = await transactionalEntityManager.findOne(User, { where: { phone: userData.phone } });
+            if (existingUserByPhone) {
+                throw new CustomHttpException(
+                    'A user with this phone number already exists',
+                    HttpStatus.CONFLICT,
+                    { statusCode: HttpStatus.BAD_REQUEST, error: true }
+                );
+            }
+
+            // Create a new staff user
             const newUser = this.userRepository.create({
                 first_name: userData.first_name,
                 last_name: userData.last_name,
                 email: userData.email,
                 phone: userData.phone,
-                password: await this.createPasswordHash(userData.password)
+                password: await this.createPasswordHash(userData.password),
             });
-            const user = await this.userRepository.save(newUser);
+            // save the new product_owner_staff user
+            const staffUser = await transactionalEntityManager.save(User, newUser);
 
-            const token = await this.emailVerificationTokenService.createEmailverificationToken(userData.email)
+            // Assign the 'product_owner_staff' role to the new user
+            const productOwnerStaffRole = await transactionalEntityManager.findOne(Role, { where: { name: UserType.PRODUCT_OWNER_STAFF } });
+            if (!productOwnerStaffRole) {
+                throw new CustomHttpException(
+                    'Role "product_owner_staff" not found',
+                    HttpStatus.NOT_FOUND,
+                    { statusCode: HttpStatus.NOT_FOUND, error: true }
+                );
+            }
 
+            // Assign the 'product_owner_staff' role to the new user
+            if (!staffUser.roles) {
+                staffUser.roles = [productOwnerStaffRole];
+            } else {
+                const hasRole = staffUser.roles.some(existingRole => existingRole.id === productOwnerStaffRole.id);
+                if (!hasRole) {
+                    staffUser.roles.push(productOwnerStaffRole);
+                }
+            }
+            //save the role
+            await transactionalEntityManager.save(User, staffUser);
+
+
+            // Assuming the current user is the product owner
+            const productOwnerUser = await transactionalEntityManager.findOne(User, { where: { id: _user.data.id } });
+
+            if (!productOwnerUser) {
+                throw new CustomHttpException(
+                    'Product Owner user not found',
+                    HttpStatus.NOT_FOUND,
+                    { statusCode: HttpStatus.NOT_FOUND, error: true }
+                );
+            }
+
+            // Create the relationship between the product owner and the new staff
+            const productOwnerStaff = new ProductOwnerStaff();
+            productOwnerStaff.productOwner = productOwnerUser;
+            productOwnerStaff.staff = staffUser;
+
+            await transactionalEntityManager.save(ProductOwnerStaff, productOwnerStaff);
 
             const data = {
-                email: user.email,
-                phone: user.phone,
-                email_verification_token: token.token,
-                first_name: user.first_name,
-                last_name: user.last_name,
-                verified: user.verified,
-                verification_link: `${process.env.ROOT_URL}` + '?token=' + `${token.token}`
-            }
+                email: staffUser.email,
+            };
 
-            //send email verification mail - rabbitmq
-            this.rabbitClient.emit('log.INFO', { name: 'auth', data: data })
+            // Send email verification mail
+            this.rabbitClient.emit('log.INFO', { name: 'auth_staff_creation', data: data });
 
-            //make a request to logger service with the payload to submit logging - rabbitmQ
-            this.rabbitClient.emit('log.INFO', { name: 'log', data: data })
+            // Log the creation
+            this.rabbitClient.emit('log.INFO', { name: 'log', data: data });
+        });
 
-            return {
-                error: false,
-                statusCode: HttpStatus.ACCEPTED,
-                message: "user account created",
-            }
-
-
-        } catch (error) {
-            if (error?.code == PostgresErrorCode.UniqueViolation) {
-                throw new CustomHttpException('user email already exist', HttpStatus.BAD_REQUEST, { statusCode: HttpStatus.BAD_REQUEST, error: true, });
-            }
-            throw new CustomHttpException('error creating user', HttpStatus.INTERNAL_SERVER_ERROR, { statusCode: HttpStatus.INTERNAL_SERVER_ERROR, error: true });
-        }
-
+        return {
+            error: false,
+            statusCode: HttpStatus.CREATED,
+            message: 'Staff user created and associated successfully, emails have been sent to the user',
+        };
     }
+
 }

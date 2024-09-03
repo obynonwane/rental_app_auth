@@ -91,24 +91,11 @@ export class AuthenticationController {
 
     @HttpCode(200)
     @UseGuards(JwtAuthenticationGuard)
-    @Post('product-owner-create-staf')
+    @Post('product-owner-create-staff')
     async productOwnerCreateStaff(@Body() userData: CreateUserDto, @Req() request: RequestWithUser, @Res() response: Response) {
-
-
         const { user } = request;
-        console.log(user)
-        // const role = await this.authenticationService.productOwnerCreateStaff(userData, user)
-
-
-        return response.status(HttpStatus.ACCEPTED).json(
-            {
-                error: false,
-                statusCode: 200,
-                message: 'role added successfully',
-                data: {
-                    data: user,
-                }
-            });
+        const result = await this.authenticationService.productOwnerCreateStaff(userData, user)
+        return response.status(HttpStatus.ACCEPTED).json(result);
     }
 
     @UseGuards(JwtAuthenticationGuard)

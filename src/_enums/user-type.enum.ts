@@ -1,7 +1,10 @@
 export enum UserType {
-    OWNER = "owner",
+    PRODUCT_OWNER = "product_owner",
     RENTER = "renter",
-    OWNER_STAFF = "owner_staff",
-    SYSTEM_ADMIN = "system_admin",
-    SYSTEM_SUPER_ADMIN = "system_super_admin"
+    PRODUCT_OWNER_STAFF = "product_owner_staff",
+    ADMIN = "admin",
+    SUPER_ADMIN = "super_admin"
 }
+
+// may above enums into an array
+export const UserTypeArray: UserType[] = Object.values(UserType);
