@@ -2,11 +2,12 @@ import { Body, Controller, Get, HttpCode, HttpStatus, Injectable, Post, Query, R
 import { Response } from 'express';
 import { AuthenticationService } from './authentication.service';
 import CreateUserDto from '../_dtos/create-user.dto';
-import { LocalAuthenticationGuard } from './local-authentication.guard';
-import RequestWithUser from './request-with-user.interface';
+import RequestWithUser from './interfaces/request-with-user.interface';
 import JwtAuthenticationGuard from './jwt-authentication.guard';
-import { JwtExceptionFilter } from './jwt-exception.filter';
+import { JwtExceptionFilter } from './filters/jwt-exception.filter';
 import CreateUserRoleDto from '../_dtos/create-role.dto';
+import LoginUserDto from '../_dtos/login-user.dto';
+
 //
 @Controller('authentication')
 @Injectable()
@@ -23,14 +24,10 @@ export class AuthenticationController {
     }
 
     @HttpCode(200)
-    @UseGuards(LocalAuthenticationGuard)
     @Post('login')
-    async logIn(@Req() request: RequestWithUser, @Res() response: Response) {
+    async logIn(@Body() userData: LoginUserDto, @Res() response: Response) {
 
-
-        const { user } = request;
-        const token: string = this.authenticationService.getCookieWithJwtToken(user.id);
-
+        const token: string = await this.authenticationService.getJwtToken(userData);
         return response.status(HttpStatus.ACCEPTED).json(
             {
                 error: false,
@@ -42,11 +39,11 @@ export class AuthenticationController {
             });
     }
 
+
     @UseGuards(JwtAuthenticationGuard)
     @UseFilters(JwtExceptionFilter)
     @Get('get-me')
     async getUserDetail(@Req() request: RequestWithUser, @Res() response: Response) {
-
         const user = request.user;
         return response.status(HttpStatus.ACCEPTED).json(user);
     }

@@ -3,9 +3,10 @@ import { UserService } from '../user/user.service';
 import CreateUserDto from 'src/_dtos/create-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { TokenPayload } from './token-payload.interface';
+import { TokenPayload } from './interfaces/token-payload.interface';
 import CreateUserRoleDto from 'src/_dtos/create-role.dto';
-import User from 'src/user/user.entity';
+import User from '../user/user.entity';
+import LoginUserDto from '../_dtos/login-user.dto';
 
 @Injectable()
 export class AuthenticationService {
@@ -16,9 +17,18 @@ export class AuthenticationService {
         private readonly configService: ConfigService
     ) { }
 
-    public getCookieWithJwtToken(userId: string) {
+    public async getJwtToken(_user: LoginUserDto) {
+
+
+        const user = await this.userService.getByEmail(_user.email, _user.password);
+
+        const userId = user.data.id
+        console.log(userId);
+        // return user
         const payload: TokenPayload = { userId };
+        console.log(payload);
         const token = this.jwtService.sign(payload);
+        console.log(token)
         return token;
     }
 

@@ -2,6 +2,7 @@
 import User from '../../user/user.entity';
 export interface JwtPayload {
   email: string;
+  userId: string;
 }
 
 export interface Permission {

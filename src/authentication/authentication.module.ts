@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 import { AuthenticationController } from './authentication.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -6,10 +6,8 @@ import User from '../user/user.entity';
 import { UserService } from '../user/user.service';
 import { PassportModule } from '@nestjs/passport';
 import { UserModule } from '../user/user.module';
-import { LocalStrategy } from './local.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-// import { JwtStrategy } from './jwt.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { EmailVerificationTokenService } from '../email-verification-token/email-verification-token.service';
@@ -18,7 +16,7 @@ import { Utility } from '../utilities/utility';
 import Role from '../role/role.entity';
 import Permission from '../permission/permission.entity';
 import ProductOwnerStaff from '../product-owner-staff/product-owner-staff.entity';
-
+@Global()
 @Module({
   imports: [
     ClientsModule.register([
@@ -35,7 +33,8 @@ import ProductOwnerStaff from '../product-owner-staff/product-owner-staff.entity
       },
     ]),
     UserModule,
-    PassportModule,
+    // PassportModule,
+    PassportModule.register({ defaultStrategy: 'jwt' }),
     ConfigModule.forRoot(),
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -49,7 +48,7 @@ import ProductOwnerStaff from '../product-owner-staff/product-owner-staff.entity
     }),
     TypeOrmModule.forFeature([User, EmailVerificationToken, Role, Permission, ProductOwnerStaff])
   ],
-  providers: [AuthenticationService, UserService, Utility, EmailVerificationTokenService, LocalStrategy, JwtStrategy],
+  providers: [AuthenticationService, UserService, Utility, EmailVerificationTokenService, JwtStrategy],
   controllers: [AuthenticationController],
   exports: [JwtStrategy, PassportModule],
 })

@@ -309,6 +309,7 @@ export class UserService {
             } else {
                 const hasRole = staffUser.roles.some(existingRole => existingRole.id === productOwnerStaffRole.id);
                 if (!hasRole) {
+                    console.log(productOwnerStaffRole, "the user role")
                     staffUser.roles.push(productOwnerStaffRole);
                 }
             }
