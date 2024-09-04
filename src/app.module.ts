@@ -16,11 +16,14 @@ import { UserRoleModule } from './user-role/user-role.module';
 import { RoleModule } from './role/role.module';
 import { PermissionModule } from './permission/permission.module';
 import { ProductOwnerStaffModule } from './product-owner-staff/product-owner-staff.module';
+import { MetricsModule } from './metrics/metrics.module';
+import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 
 
 
 @Module({
   imports: [
+    PrometheusModule.register(),
     HttpModule,
     ConfigModule.forRoot({
       validationSchema: Joi.object({
@@ -44,6 +47,7 @@ import { ProductOwnerStaffModule } from './product-owner-staff/product-owner-sta
     RoleModule,
     PermissionModule,
     ProductOwnerStaffModule,
+    MetricsModule,
   ],
   controllers: [],
   providers: [],
