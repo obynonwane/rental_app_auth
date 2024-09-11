@@ -17,6 +17,7 @@ import { JsonResponse } from './respose-interface';
 import { UserType, UserTypeArray } from "../_enums/user-type.enum"
 import ProductOwnerStaff from "../product-owner-staff/product-owner-staff.entity"
 import AssignUserPermissionDto from '../_dtos/assign-permission.dto';
+import UserPermission from '../user-permission/user-permission.entity';
 
 
 
@@ -43,6 +44,9 @@ export class UserService {
 
         @InjectRepository(ProductOwnerStaff)
         private productOwnerStaffRepository: Repository<ProductOwnerStaff>,
+
+        @InjectRepository(UserPermission)
+        private userPermissionRepository: Repository<UserPermission>,
 
         private emailVerificationTokenService: EmailVerificationTokenService,
 
@@ -242,31 +246,6 @@ export class UserService {
         return response;
     }
 
-    public async productOwnerAssignPermission(user: any, payload: AssignUserPermissionDto) {
-        // 1. get the user 
-        const staff = await this.userRepository.findOne({ where: { id: payload.user_id } });
-
-        // . get the permission
-        const permission = await this.permissionRepository.findOne({ where: { id: payload.permission_id } });
-
-        const response: JsonResponse = {
-            error: false,
-            message: 'Permission assigned succesfully',
-            statusCode: HttpStatus.OK,
-            data: {
-                staff, permission
-
-            }
-        };
-
-        // 3. asiign the permission 
-        
-        return response;
-
-
-        // log the action 
-        // return response 
-    }
 
     public async productOwnerCreateStaff(userData: CreateUserDto, _user: any) {
         // Extract the user roles
@@ -379,5 +358,84 @@ export class UserService {
             message: 'Staff user created and associated successfully, emails have been sent to the user',
         };
     }
+
+
+    public async productOwnerAssignPermission(user: any, payload: AssignUserPermissionDto): Promise<JsonResponse> {
+        try {
+            // 1. Get the user 
+            const staff = await this.userRepository.findOne({ where: { id: payload.user_id } });
+            if (!staff) {
+                throw new CustomHttpException(
+                    `User with ID ${payload.user_id} not found.`,
+                    HttpStatus.NOT_FOUND,
+                    { statusCode: HttpStatus.NOT_FOUND, error: true }
+                );
+            }
+
+            // 2. Get the permission
+            const permission = await this.permissionRepository.findOne({ where: { id: payload.permission_id } });
+            if (!permission) {
+                throw new CustomHttpException(
+                    `Permission with ID ${payload.permission_id} not found.`,
+                    HttpStatus.NOT_FOUND,
+                    { statusCode: HttpStatus.NOT_FOUND, error: true }
+                );
+            }
+
+            // 3. Check if the user already has the permission
+            const existingPermission = await this.userPermissionRepository.findOne({
+                where: {
+                    user: { id: payload.user_id },  // Assuming 'user' is a relation field
+                    permission: { id: payload.permission_id }  // Assuming 'permission' is a relation field
+                }
+            });
+
+
+            if (existingPermission) {
+                const response: JsonResponse = {
+                    error: true,
+                    message: 'User already has this permission',
+                    statusCode: HttpStatus.BAD_REQUEST,
+                    data: null
+                };
+                return response;
+            }
+
+            // 4. Assign the permission 
+            const new_permission = this.userPermissionRepository.create({
+                user: staff,
+                permission: permission
+            });
+
+            // Save the new permission assignment
+            await this.userPermissionRepository.save(new_permission);
+
+            new_permission.user.password = undefined;
+            // Successful response
+            const response: JsonResponse = {
+                error: false,
+                message: 'Permission assigned successfully',
+                statusCode: HttpStatus.OK,
+                data: new_permission,
+            };
+
+            return response;
+        } catch (error) {
+            // Log the error if needed (e.g., to a monitoring service)
+            console.error('Error during permission assignment:', error);
+
+            // Error response
+            const response: JsonResponse = {
+                error: true,
+                message: error.message || 'An error occurred while assigning the permission.',
+                statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+                data: null,
+            };
+
+            return response;
+        }
+    }
+
+
 
 }

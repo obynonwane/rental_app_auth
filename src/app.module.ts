@@ -49,7 +49,6 @@ import { UserPermissionModule } from './user-permission/user-permission.module';
     PermissionModule,
     ProductOwnerStaffModule,
     MetricsModule,
-    UserPermission,
     UserPermissionModule,
   ],
   controllers: [],
