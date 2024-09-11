@@ -391,7 +391,7 @@ export class UserService {
                 );
             }
 
-            // 4. Check if the user already has the permission
+            // 4. Check if the user already has the permissions
             const existingPermission = await this.userPermissionRepository.findOne({
                 where: {
                     user: { id: payload.user_id },  // Assuming 'user' is a relation field
