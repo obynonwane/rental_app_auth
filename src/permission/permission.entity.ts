@@ -15,7 +15,7 @@ export class Permission {
     roles: Role[];
 
     @OneToMany(() => UserPermission, userPermission => userPermission.permission)
-    public users: UserPermission[];
+    public userPermissions: UserPermission[];
 
     @CreateDateColumn()
     created_at: Date;

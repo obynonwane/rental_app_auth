@@ -12,7 +12,7 @@ class UserPermission {
     @JoinColumn({ name: 'user_id' })
     public user: User;
 
-    @ManyToOne(() => Permission, permission => permission.users, { onDelete: 'CASCADE' }) // Many users can have one permission
+    @ManyToOne(() => Permission, permission => permission.userPermissions, { onDelete: 'CASCADE' }) // Many users can have one permission
     @JoinColumn({ name: 'permission_id' })
     public permission: Permission;
 

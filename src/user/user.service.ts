@@ -362,7 +362,16 @@ export class UserService {
 
     public async productOwnerAssignPermission(user: any, payload: AssignUserPermissionDto): Promise<JsonResponse> {
         try {
-            // 1. Get the user 
+
+            // 1. check if user have permission
+            if (!user.data.roles.includes(UserType.PRODUCT_OWNER)) {
+                throw new CustomHttpException(
+                    `user have no authorization to assign permission`,
+                    HttpStatus.UNAUTHORIZED,
+                    { statusCode: HttpStatus.UNAUTHORIZED, error: false }
+                );
+            }
+            // 2. Get the user 
             const staff = await this.userRepository.findOne({ where: { id: payload.user_id } });
             if (!staff) {
                 throw new CustomHttpException(
@@ -372,7 +381,7 @@ export class UserService {
                 );
             }
 
-            // 2. Get the permission
+            // 3. Get the permission
             const permission = await this.permissionRepository.findOne({ where: { id: payload.permission_id } });
             if (!permission) {
                 throw new CustomHttpException(
@@ -382,7 +391,7 @@ export class UserService {
                 );
             }
 
-            // 3. Check if the user already has the permission
+            // 4. Check if the user already has the permission
             const existingPermission = await this.userPermissionRepository.findOne({
                 where: {
                     user: { id: payload.user_id },  // Assuming 'user' is a relation field
@@ -401,7 +410,7 @@ export class UserService {
                 return response;
             }
 
-            // 4. Assign the permission 
+            // 5. Assign the permission 
             const new_permission = this.userPermissionRepository.create({
                 user: staff,
                 permission: permission
