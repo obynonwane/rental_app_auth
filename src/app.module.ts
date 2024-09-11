@@ -18,6 +18,7 @@ import { PermissionModule } from './permission/permission.module';
 import { ProductOwnerStaffModule } from './product-owner-staff/product-owner-staff.module';
 import { MetricsModule } from './metrics/metrics.module';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
+import { UserPermissionModule } from './user-permission/user-permission.module';
 
 
 
@@ -48,6 +49,8 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
     PermissionModule,
     ProductOwnerStaffModule,
     MetricsModule,
+    UserPermission,
+    UserPermissionModule,
   ],
   controllers: [],
   providers: [],

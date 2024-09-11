@@ -7,6 +7,7 @@ import { TokenPayload } from './interfaces/token-payload.interface';
 import CreateUserRoleDto from 'src/_dtos/create-role.dto';
 import User from '../user/user.entity';
 import LoginUserDto from '../_dtos/login-user.dto';
+import AssignUserPermissionDto from '../_dtos/assign-permission.dto';
 
 @Injectable()
 export class AuthenticationService {
@@ -57,6 +58,10 @@ export class AuthenticationService {
 
     public async productOwnerPermission(user: User) {
         return await this.userService.productOwnerPermission(user);
+    }
+
+    public async productOwnerAssignPermission(user: any, payload: AssignUserPermissionDto) {
+        return await this.userService.productOwnerAssignPermission(user, payload);
     }
 
 }

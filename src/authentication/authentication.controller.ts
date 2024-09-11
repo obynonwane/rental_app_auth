@@ -7,6 +7,7 @@ import JwtAuthenticationGuard from './jwt-authentication.guard';
 import { JwtExceptionFilter } from './filters/jwt-exception.filter';
 import CreateUserRoleDto from '../_dtos/create-role.dto';
 import LoginUserDto from '../_dtos/login-user.dto';
+import AssignUserPermissionDto from '../_dtos/assign-permission.dto';
 
 //
 @Controller('authentication')
@@ -84,6 +85,16 @@ export class AuthenticationController {
         const { user } = request;
         const role = await this.authenticationService.productOwnerPermission(user)
         return response.status(HttpStatus.ACCEPTED).json(role);
+    }
+
+    @HttpCode(200)
+    @UseGuards(JwtAuthenticationGuard)
+    @Post('assign-permission')
+    async productOwnerAssignPermission(@Body() payload: AssignUserPermissionDto, @Req() request: RequestWithUser, @Res() response: Response) {
+
+        const { user } = request;
+        const result = await this.authenticationService.productOwnerAssignPermission(user, payload);
+        return response.status(HttpStatus.ACCEPTED).json(result);
     }
 
     @HttpCode(200)

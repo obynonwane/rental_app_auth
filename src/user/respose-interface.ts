@@ -8,5 +8,5 @@ export interface JsonResponse {
     error: boolean;
     message: string;
     statusCode: number;
-    data: Data;
+    data: any;
 }

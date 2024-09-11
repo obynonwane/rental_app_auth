@@ -16,6 +16,7 @@ import Permission from '../permission/permission.entity';
 import { JsonResponse } from './respose-interface';
 import { UserType, UserTypeArray } from "../_enums/user-type.enum"
 import ProductOwnerStaff from "../product-owner-staff/product-owner-staff.entity"
+import AssignUserPermissionDto from '../_dtos/assign-permission.dto';
 
 
 
@@ -239,6 +240,32 @@ export class UserService {
 
         // Return the new response
         return response;
+    }
+
+    public async productOwnerAssignPermission(user: any, payload: AssignUserPermissionDto) {
+        // 1. get the user 
+        const staff = await this.userRepository.findOne({ where: { id: payload.user_id } });
+
+        // . get the permission
+        const permission = await this.permissionRepository.findOne({ where: { id: payload.permission_id } });
+
+        const response: JsonResponse = {
+            error: false,
+            message: 'Permission assigned succesfully',
+            statusCode: HttpStatus.OK,
+            data: {
+                staff, permission
+
+            }
+        };
+
+        // 3. asiign the permission 
+        
+        return response;
+
+
+        // log the action 
+        // return response 
     }
 
     public async productOwnerCreateStaff(userData: CreateUserDto, _user: any) {

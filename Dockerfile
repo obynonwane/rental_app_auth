@@ -34,6 +34,9 @@ WORKDIR /app
 # Copy package.json and package-lock.json to the container
 COPY package.json package-lock.json ./
 
+# installing npm globally
+RUN npm install -g npm@10.8.3
+
 # Install app dependencies
 RUN npm install --frozen-lockfile
 
