@@ -17,6 +17,7 @@ import Role from '../role/role.entity';
 import Permission from '../permission/permission.entity';
 import ProductOwnerStaff from '../product-owner-staff/product-owner-staff.entity';
 import UserPermission from '../user-permission/user-permission.entity';
+import Country from '../country/country.entity';
 @Global()
 @Module({
   imports: [
@@ -47,7 +48,7 @@ import UserPermission from '../user-permission/user-permission.entity';
         },
       }),
     }),
-    TypeOrmModule.forFeature([User, EmailVerificationToken, Role, Permission, ProductOwnerStaff, UserPermission])
+    TypeOrmModule.forFeature([User, EmailVerificationToken, Role, Permission, ProductOwnerStaff, UserPermission, Country])
   ],
   providers: [AuthenticationService, UserService, Utility, EmailVerificationTokenService, JwtStrategy],
   controllers: [AuthenticationController],

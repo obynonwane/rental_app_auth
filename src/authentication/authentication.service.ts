@@ -64,4 +64,11 @@ export class AuthenticationService {
         return await this.userService.productOwnerAssignPermission(user, payload);
     }
 
+    public async getCountries() {
+        return await this.userService.getCountries();
+    }
+
+
+
+
 }

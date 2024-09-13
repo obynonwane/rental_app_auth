@@ -10,6 +10,7 @@ import Role from '../role/role.entity';
 import Permission from '../permission/permission.entity';
 import ProductOwnerStaff from '../product-owner-staff/product-owner-staff.entity';
 import UserPermission from '../user-permission/user-permission.entity';
+import Country from '../country/country.entity';
 
 
 
@@ -29,7 +30,7 @@ import UserPermission from '../user-permission/user-permission.entity';
         },
       },
     ]),
-    TypeOrmModule.forFeature([User, EmailVerificationToken, Role, Permission, ProductOwnerStaff, UserPermission])],
+    TypeOrmModule.forFeature([User, EmailVerificationToken, Role, Permission, ProductOwnerStaff, UserPermission, Country])],
   providers: [UserService, EmailVerificationTokenService, Utility]
 })
 export class UserModule { }

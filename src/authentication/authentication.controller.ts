@@ -127,6 +127,13 @@ export class AuthenticationController {
     }
 
 
+    @HttpCode(200)
+    @UseGuards(JwtAuthenticationGuard)
+    @Get('countries')
+    async getCountries(@Req() request: RequestWithUser, @Res() response: Response) {
+        const result = await this.authenticationService.getCountries();
+        return response.status(HttpStatus.ACCEPTED).json(result);
+    }
 
 }
 

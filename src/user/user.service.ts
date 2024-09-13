@@ -18,6 +18,7 @@ import { UserType, UserTypeArray } from "../_enums/user-type.enum"
 import ProductOwnerStaff from "../product-owner-staff/product-owner-staff.entity"
 import AssignUserPermissionDto from '../_dtos/assign-permission.dto';
 import UserPermission from '../user-permission/user-permission.entity';
+import Country from '../country/country.entity';
 
 
 
@@ -47,6 +48,9 @@ export class UserService {
 
         @InjectRepository(UserPermission)
         private userPermissionRepository: Repository<UserPermission>,
+
+        @InjectRepository(Country)
+        private countryRepository: Repository<Country>,
 
         private emailVerificationTokenService: EmailVerificationTokenService,
 
@@ -445,6 +449,13 @@ export class UserService {
         }
     }
 
-
-
+    public async getCountries() {
+        const response: JsonResponse = {
+            error: false,
+            message: 'countries retrived succesfully',
+            statusCode: HttpStatus.OK,
+            data: await this.countryRepository.find(),
+        };
+        return response;
+    }
 }
