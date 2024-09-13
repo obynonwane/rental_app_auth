@@ -19,6 +19,8 @@ import ProductOwnerStaff from "../product-owner-staff/product-owner-staff.entity
 import AssignUserPermissionDto from '../_dtos/assign-permission.dto';
 import UserPermission from '../user-permission/user-permission.entity';
 import Country from '../country/country.entity';
+import State from '../state/state.entity';
+import Lga from '../lga/lga.entity';
 
 
 
@@ -51,6 +53,12 @@ export class UserService {
 
         @InjectRepository(Country)
         private countryRepository: Repository<Country>,
+
+        @InjectRepository(State)
+        private stateRepository: Repository<State>,
+
+        @InjectRepository(Lga)
+        private lgaRepository: Repository<Lga>,
 
         private emailVerificationTokenService: EmailVerificationTokenService,
 
@@ -448,13 +456,30 @@ export class UserService {
             return response;
         }
     }
-
     public async getCountries() {
         const response: JsonResponse = {
             error: false,
             message: 'countries retrived succesfully',
             statusCode: HttpStatus.OK,
             data: await this.countryRepository.find(),
+        };
+        return response;
+    }
+    public async getStates() {
+        const response: JsonResponse = {
+            error: false,
+            message: 'states retrived succesfully',
+            statusCode: HttpStatus.OK,
+            data: await this.stateRepository.find(),
+        };
+        return response;
+    }
+    public async getLgas() {
+        const response: JsonResponse = {
+            error: false,
+            message: 'lgas retrived succesfully',
+            statusCode: HttpStatus.OK,
+            data: await this.lgaRepository.find(),
         };
         return response;
     }

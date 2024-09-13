@@ -135,5 +135,22 @@ export class AuthenticationController {
         return response.status(HttpStatus.ACCEPTED).json(result);
     }
 
+    @HttpCode(200)
+    @UseGuards(JwtAuthenticationGuard)
+    @Get('states')
+    async getStates(@Req() request: RequestWithUser, @Res() response: Response) {
+        const result = await this.authenticationService.getStates();
+        return response.status(HttpStatus.ACCEPTED).json(result);
+    }
+
+
+    @HttpCode(200)
+    @UseGuards(JwtAuthenticationGuard)
+    @Get('lgas')
+    async getLgas(@Req() request: RequestWithUser, @Res() response: Response) {
+        const result = await this.authenticationService.getLgas();
+        return response.status(HttpStatus.ACCEPTED).json(result);
+    }
+
 }
 
