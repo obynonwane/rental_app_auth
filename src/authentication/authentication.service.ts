@@ -73,4 +73,12 @@ export class AuthenticationService {
     public async getLgas() {
         return await this.userService.getLgas();
     }
+
+    public async getCountryState(id: string) {
+        return await this.userService.getCountryState(id);
+    }
+
+    public async getStateLgas(id: string) {
+        return await this.userService.getStateLgas(id);
+    }
 }

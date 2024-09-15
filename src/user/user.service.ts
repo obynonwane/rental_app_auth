@@ -474,12 +474,36 @@ export class UserService {
         };
         return response;
     }
+
     public async getLgas() {
+
         const response: JsonResponse = {
             error: false,
             message: 'lgas retrived succesfully',
             statusCode: HttpStatus.OK,
             data: await this.lgaRepository.find(),
+        };
+        return response;
+    }
+    public async getCountryState(id: string) {
+
+        const response: JsonResponse = {
+            error: false,
+            message: 'country states retrived succesfully',
+            statusCode: HttpStatus.OK,
+            data: await this.stateRepository.find({ where: { country: { id: id } } }),
+        };
+        return response;
+    }
+
+
+    public async getStateLgas(id: string) {
+
+        const response: JsonResponse = {
+            error: false,
+            message: 'state lgas retrived succesfully',
+            statusCode: HttpStatus.OK,
+            data: await this.lgaRepository.find({ where: { state: { id: id } } }),
         };
         return response;
     }

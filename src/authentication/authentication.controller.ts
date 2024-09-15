@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Injectable, Post, Query, Req, Res, UseFilters, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Injectable, Param, Post, Query, Req, Res, UseFilters, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthenticationService } from './authentication.service';
 import CreateUserDto from '../_dtos/create-user.dto';
@@ -151,6 +151,26 @@ export class AuthenticationController {
         const result = await this.authenticationService.getLgas();
         return response.status(HttpStatus.ACCEPTED).json(result);
     }
+
+    @HttpCode(200)
+    @UseGuards(JwtAuthenticationGuard)
+    @Get('country/state/:id')
+    async getCountryState(@Param('id') id: string, @Req() request: RequestWithUser, @Res() response: Response) {
+
+        const result = await this.authenticationService.getCountryState(id);
+        return response.status(HttpStatus.ACCEPTED).json(result);
+    }
+
+
+    @HttpCode(200)
+    @UseGuards(JwtAuthenticationGuard)
+    @Get('state/lgas/:id')
+    async getStateLgas(@Param('id') id: string, @Req() request: RequestWithUser, @Res() response: Response) {
+
+        const result = await this.authenticationService.getStateLgas(id);
+        return response.status(HttpStatus.ACCEPTED).json(result);
+    }
+
 
 }
 
