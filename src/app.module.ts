@@ -22,6 +22,7 @@ import { UserPermissionModule } from './user-permission/user-permission.module';
 import { CountryModule } from './country/country.module';
 import { LgaModule } from './lga/lga.module';
 import { StateModule } from './state/state.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 
 
@@ -56,6 +57,7 @@ import { StateModule } from './state/state.module';
     CountryModule,
     LgaModule,
     StateModule,
+    CloudinaryModule,
   ],
   controllers: [],
   providers: [],

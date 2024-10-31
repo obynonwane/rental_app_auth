@@ -1,5 +1,6 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Injectable, Param, Post, Query, Req, Res, UseFilters, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Injectable, Param, Post, Query, Req, Res, UploadedFile, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
 import { Response } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthenticationService } from './authentication.service';
 import CreateUserDto from '../_dtos/create-user.dto';
 import RequestWithUser from './interfaces/request-with-user.interface';
@@ -8,6 +9,11 @@ import { JwtExceptionFilter } from './filters/jwt-exception.filter';
 import CreateUserRoleDto from '../_dtos/create-role.dto';
 import LoginUserDto from '../_dtos/login-user.dto';
 import AssignUserPermissionDto from '../_dtos/assign-permission.dto';
+import * as path from 'path';
+
+import * as fs from 'fs';
+import { v4 as uuidv4 } from 'uuid'; // For generating unique filenames
+import * as mime from 'mime-types'; // Import mime-types package
 
 //
 @Controller('authentication')
@@ -171,6 +177,123 @@ export class AuthenticationController {
         return response.status(HttpStatus.ACCEPTED).json(result);
     }
 
+
+    // @HttpCode(200)
+    // @UseGuards(JwtAuthenticationGuard)
+    // @UseInterceptors(FileInterceptor('file'))
+    // @Post('renter-kyc')
+    // async kycRenter(
+    //     @UploadedFile() file: Express.Multer.File,
+    //     @Body() body: any,
+    //     @Req() request: RequestWithUser,
+    //     @Res() response: Response
+    // ) {
+    //     // Debug: Log the original filename
+    //     console.log('Original filename:', file.originalname);
+
+    //     // Access additional form fields
+    //     const address = body.address;
+    //     const idNumber = body.id_number;
+
+    //     // Define the target directory where you want to move the file (relative to the src directory)
+    //     const targetDirectory = path.join(__dirname, '..', 'uploads'); // This points to src/uploads
+
+    //     // Ensure the uploads directory exists; if not, create it
+    //     if (!fs.existsSync(targetDirectory)) {
+    //         fs.mkdirSync(targetDirectory, { recursive: true });
+    //     }
+
+    //     // Attempt to get the file extension
+    //     // let fileExtension = path.extname(file.originalname);
+    //     const splitFileName = file.originalname.split('.');
+    //     const extension = splitFileName.length - 1;
+
+
+    //     // Generate a unique file name using UUID and append the determined file extension
+    //     // const uniqueFileName = `${uuidv4()}${fileExtension}`;
+    //     const uniqueFileName = uuidv4() + '.' + splitFileName[extension];
+
+    //     // Define the full path for the new file
+    //     const targetPath = path.join(targetDirectory, uniqueFileName);
+
+    //     // Move the file to the target directory
+    //     fs.writeFileSync(targetPath, file.buffer);
+
+    //     // Process the file and data as needed
+    //     return response.status(HttpStatus.ACCEPTED).json({
+    //         error: false,
+    //         statusCode: 200,
+    //         message: 'File and data received and processed',
+    //         data: {
+    //             data: targetPath,
+    //         },
+    //     });
+    // }
+
+    @HttpCode(200)
+    @UseGuards(JwtAuthenticationGuard)
+    @UseInterceptors(FileInterceptor('file'))
+    @Post('renter-kyc')
+    async kycRenter(
+        @UploadedFile() file: Express.Multer.File,
+        @Body() body: any,
+        @Req() request: RequestWithUser,
+        @Res() response: Response
+    ) {
+        // Debug: Log the original filename
+        console.log('Original filename:', file.originalname);
+
+        // Access additional form fields
+        const address = body.address;
+        const idNumber = body.id_number;
+        const idType = body.id_type;
+        const addressCountry = body.address_country;
+        const addressState = body.address_state;
+        const addressLga = body.address_lga;
+
+
+
+        // Define the target directory relative to the project root
+        // Use process.cwd() to get the project root directory
+        const targetDirectory = path.join(process.cwd(), 'src', 'uploads');
+
+        // Ensure the uploads directory exists; if not, create it
+        if (!fs.existsSync(targetDirectory)) {
+            fs.mkdirSync(targetDirectory, { recursive: true });
+        }
+
+        // Get the file extension
+        const fileExtension = path.extname(file.originalname);
+
+        // Generate a unique file name using UUID and append the file extension
+        const uniqueFileName = `${uuidv4()}${fileExtension}`;
+
+        // Define the full path for the new file
+        const targetPath = path.join(targetDirectory, uniqueFileName);
+
+        // Move the file to the target directory
+        fs.writeFileSync(targetPath, file.buffer);
+
+
+        console.log(address)
+        console.log(idNumber)
+        console.log(idType)
+        console.log(addressCountry)
+        console.log(addressState)
+        console.log(addressLga)
+        console.log(uniqueFileName)
+
+
+        // Process the file and data as needed
+        return response.status(HttpStatus.ACCEPTED).json({
+            error: false,
+            statusCode: 200,
+            message: 'File and data received and processed',
+            data: {
+                data: targetPath,
+            },
+        });
+    }
 
 }
 
