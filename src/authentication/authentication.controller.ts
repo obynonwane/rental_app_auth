@@ -275,14 +275,18 @@ export class AuthenticationController {
         fs.writeFileSync(targetPath, file.buffer);
 
 
-        console.log(address)
-        console.log(idNumber)
-        console.log(idType)
-        console.log(addressCountry)
-        console.log(addressState)
-        console.log(addressLga)
-        console.log(uniqueFileName)
+        const details = {
+            address,
+            idNumber,
+            idType,
+            addressCountry,
+            addressState,
+            addressLga,
+            uniqueFileName,
+        }
 
+
+        await this.authenticationService.kycRenter(details);
 
         // Process the file and data as needed
         return response.status(HttpStatus.ACCEPTED).json({

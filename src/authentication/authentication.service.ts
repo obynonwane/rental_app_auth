@@ -8,6 +8,7 @@ import CreateUserRoleDto from 'src/_dtos/create-role.dto';
 import User from '../user/user.entity';
 import LoginUserDto from '../_dtos/login-user.dto';
 import AssignUserPermissionDto from '../_dtos/assign-permission.dto';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
 @Injectable()
 export class AuthenticationService {
@@ -15,7 +16,8 @@ export class AuthenticationService {
     constructor(
         private userService: UserService,
         private readonly jwtService: JwtService,
-        private readonly configService: ConfigService
+        private readonly configService: ConfigService,
+        private cloudinaryService: CloudinaryService
     ) { }
 
     public async getJwtToken(_user: LoginUserDto) {
@@ -80,5 +82,14 @@ export class AuthenticationService {
 
     public async getStateLgas(id: string) {
         return await this.userService.getStateLgas(id);
+    }
+
+    public async kycRenter(details: any) {
+        try {
+            console.log(details)
+
+        } catch (error) {
+
+        }
     }
 }

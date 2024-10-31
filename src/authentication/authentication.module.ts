@@ -20,6 +20,7 @@ import UserPermission from '../user-permission/user-permission.entity';
 import Country from '../country/country.entity';
 import State from '../state/state.entity';
 import Lga from '../lga/lga.entity';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 @Global()
 @Module({
   imports: [
@@ -62,7 +63,14 @@ import Lga from '../lga/lga.entity';
       Lga
     ])
   ],
-  providers: [AuthenticationService, UserService, Utility, EmailVerificationTokenService, JwtStrategy],
+  providers: [
+    AuthenticationService,
+    UserService,
+    Utility,
+    EmailVerificationTokenService,
+    JwtStrategy,
+    CloudinaryService
+  ],
   controllers: [AuthenticationController],
   exports: [JwtStrategy, PassportModule],
 })
