@@ -9,6 +9,7 @@ import User from '../user/user.entity';
 import LoginUserDto from '../_dtos/login-user.dto';
 import AssignUserPermissionDto from '../_dtos/assign-permission.dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import RenterKycDto from '../_dtos/renter-kyc.dto';
 
 @Injectable()
 export class AuthenticationService {
@@ -84,9 +85,9 @@ export class AuthenticationService {
         return await this.userService.getStateLgas(id);
     }
 
-    public async kycRenter(details: any) {
+    public async kycRenter(details: RenterKycDto) {
         try {
-            console.log(details)
+            await this.cloudinaryService.uploadRenterKyc(details)
 
         } catch (error) {
 

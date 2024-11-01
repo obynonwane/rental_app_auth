@@ -14,6 +14,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { v4 as uuidv4 } from 'uuid'; // For generating unique filenames
 import * as mime from 'mime-types'; // Import mime-types package
+import RenterKycDto from 'src/_dtos/renter-kyc.dto';
 
 //
 @Controller('authentication')
@@ -255,7 +256,7 @@ export class AuthenticationController {
 
         // Define the target directory relative to the project root
         // Use process.cwd() to get the project root directory
-        const targetDirectory = path.join(process.cwd(), 'src', 'uploads');
+        const targetDirectory = path.join(process.cwd(), '/', 'uploads');
 
         // Ensure the uploads directory exists; if not, create it
         if (!fs.existsSync(targetDirectory)) {
@@ -275,7 +276,7 @@ export class AuthenticationController {
         fs.writeFileSync(targetPath, file.buffer);
 
 
-        const details = {
+        const details: RenterKycDto = {
             address,
             idNumber,
             idType,
@@ -283,6 +284,7 @@ export class AuthenticationController {
             addressState,
             addressLga,
             uniqueFileName,
+            targetPath,
         }
 
 
