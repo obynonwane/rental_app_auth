@@ -23,6 +23,8 @@ import { CountryModule } from './country/country.module';
 import { LgaModule } from './lga/lga.module';
 import { StateModule } from './state/state.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { RenterKycModule } from './renter-kyc/renter-kyc.module';
+import { IdentityTypesModule } from './identity-types/identity-types.module';
 
 
 
@@ -58,6 +60,8 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
     LgaModule,
     StateModule,
     CloudinaryModule,
+    RenterKycModule,
+    IdentityTypesModule,
   ],
   controllers: [],
   providers: [],
