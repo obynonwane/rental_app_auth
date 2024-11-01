@@ -23,6 +23,8 @@ import Lga from '../lga/lga.entity';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { RenterKycService } from '../renter-kyc/renter-kyc.service';
 import { IdentityTypesService } from '../identity-types/identity-types.service';
+import IdentityType from '../identity-types/identity-types.entity';
+import { RenterKyc } from '../renter-kyc/renter-kyc.entity';
 @Global()
 @Module({
   imports: [
@@ -62,7 +64,9 @@ import { IdentityTypesService } from '../identity-types/identity-types.service';
       UserPermission,
       Country,
       State,
-      Lga
+      Lga,
+      IdentityType,
+      RenterKyc
     ])
   ],
   providers: [

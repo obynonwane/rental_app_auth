@@ -94,6 +94,6 @@ export class AuthenticationService {
     }
 
     public async retriveIdentificationTypes() {
-        // await this.cloudinaryService.uploadRenterKyc()
+        return await this.identityTypesService.getAll()
     }
 }

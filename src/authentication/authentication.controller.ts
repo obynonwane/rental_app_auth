@@ -253,12 +253,21 @@ export class AuthenticationController {
 
     @HttpCode(200)
     @UseGuards(JwtAuthenticationGuard)
-    @Get('retrive-identification-types')
+    @Get('retrieve-identification-types')
     async retriveIdentificationTypes(@Req() request: RequestWithUser, @Res() response: Response) {
+        console.log("reached here")
         const result = await this.authenticationService.retriveIdentificationTypes()
-        return response.status(HttpStatus.ACCEPTED).json(result);
+        return response.status(HttpStatus.ACCEPTED).json({
+            error: false,
+            statusCode: 200,
+            message: 'Identification types retrived sucessfully',
+            data: {
+                data: result,
+            },
+        });
     }
-
-
 }
+
+
+
 
