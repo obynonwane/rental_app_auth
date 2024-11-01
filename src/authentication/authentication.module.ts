@@ -21,6 +21,8 @@ import Country from '../country/country.entity';
 import State from '../state/state.entity';
 import Lga from '../lga/lga.entity';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { RenterKycService } from '../renter-kyc/renter-kyc.service';
+import { IdentityTypesService } from '../identity-types/identity-types.service';
 @Global()
 @Module({
   imports: [
@@ -69,7 +71,9 @@ import { CloudinaryService } from '../cloudinary/cloudinary.service';
     Utility,
     EmailVerificationTokenService,
     JwtStrategy,
-    CloudinaryService
+    CloudinaryService,
+    RenterKycService,
+    IdentityTypesService,
   ],
   controllers: [AuthenticationController],
   exports: [JwtStrategy, PassportModule],

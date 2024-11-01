@@ -10,6 +10,8 @@ import LoginUserDto from '../_dtos/login-user.dto';
 import AssignUserPermissionDto from '../_dtos/assign-permission.dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import RenterKycDto from '../_dtos/renter-kyc.dto';
+import { IdentityTypesService } from '../identity-types/identity-types.service';
+import { RenterKycService } from '../renter-kyc/renter-kyc.service';
 
 @Injectable()
 export class AuthenticationService {
@@ -18,7 +20,9 @@ export class AuthenticationService {
         private userService: UserService,
         private readonly jwtService: JwtService,
         private readonly configService: ConfigService,
-        private cloudinaryService: CloudinaryService
+        private cloudinaryService: CloudinaryService,
+        private identityTypesService: IdentityTypesService,
+        private renterKycService: RenterKycService
     ) { }
 
     public async getJwtToken(_user: LoginUserDto) {
@@ -86,11 +90,10 @@ export class AuthenticationService {
     }
 
     public async kycRenter(details: RenterKycDto) {
-        try {
-            await this.cloudinaryService.uploadRenterKyc(details)
+        await this.cloudinaryService.uploadRenterKyc(details)
+    }
 
-        } catch (error) {
-
-        }
+    public async retriveIdentificationTypes() {
+        // await this.cloudinaryService.uploadRenterKyc()
     }
 }

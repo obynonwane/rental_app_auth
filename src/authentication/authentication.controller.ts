@@ -179,57 +179,6 @@ export class AuthenticationController {
     }
 
 
-    // @HttpCode(200)
-    // @UseGuards(JwtAuthenticationGuard)
-    // @UseInterceptors(FileInterceptor('file'))
-    // @Post('renter-kyc')
-    // async kycRenter(
-    //     @UploadedFile() file: Express.Multer.File,
-    //     @Body() body: any,
-    //     @Req() request: RequestWithUser,
-    //     @Res() response: Response
-    // ) {
-    //     // Debug: Log the original filename
-    //     console.log('Original filename:', file.originalname);
-
-    //     // Access additional form fields
-    //     const address = body.address;
-    //     const idNumber = body.id_number;
-
-    //     // Define the target directory where you want to move the file (relative to the src directory)
-    //     const targetDirectory = path.join(__dirname, '..', 'uploads'); // This points to src/uploads
-
-    //     // Ensure the uploads directory exists; if not, create it
-    //     if (!fs.existsSync(targetDirectory)) {
-    //         fs.mkdirSync(targetDirectory, { recursive: true });
-    //     }
-
-    //     // Attempt to get the file extension
-    //     // let fileExtension = path.extname(file.originalname);
-    //     const splitFileName = file.originalname.split('.');
-    //     const extension = splitFileName.length - 1;
-
-
-    //     // Generate a unique file name using UUID and append the determined file extension
-    //     // const uniqueFileName = `${uuidv4()}${fileExtension}`;
-    //     const uniqueFileName = uuidv4() + '.' + splitFileName[extension];
-
-    //     // Define the full path for the new file
-    //     const targetPath = path.join(targetDirectory, uniqueFileName);
-
-    //     // Move the file to the target directory
-    //     fs.writeFileSync(targetPath, file.buffer);
-
-    //     // Process the file and data as needed
-    //     return response.status(HttpStatus.ACCEPTED).json({
-    //         error: false,
-    //         statusCode: 200,
-    //         message: 'File and data received and processed',
-    //         data: {
-    //             data: targetPath,
-    //         },
-    //     });
-    // }
 
     @HttpCode(200)
     @UseGuards(JwtAuthenticationGuard)
@@ -300,6 +249,16 @@ export class AuthenticationController {
             },
         });
     }
+
+
+    @HttpCode(200)
+    @UseGuards(JwtAuthenticationGuard)
+    @Get('retrive-identification-types')
+    async retriveIdentificationTypes(@Req() request: RequestWithUser, @Res() response: Response) {
+        const result = await this.authenticationService.retriveIdentificationTypes()
+        return response.status(HttpStatus.ACCEPTED).json(result);
+    }
+
 
 }
 
