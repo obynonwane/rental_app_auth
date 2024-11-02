@@ -15,6 +15,7 @@ import * as fs from 'fs';
 import { v4 as uuidv4 } from 'uuid'; // For generating unique filenames
 import * as mime from 'mime-types'; // Import mime-types package
 import RenterKycDto from 'src/_dtos/renter-kyc.dto';
+import { IsRenterGuard } from './guards/is-renter.guard';
 
 //
 @Controller('authentication')
@@ -181,7 +182,7 @@ export class AuthenticationController {
 
 
     @HttpCode(200)
-    @UseGuards(JwtAuthenticationGuard)
+    @UseGuards(JwtAuthenticationGuard, IsRenterGuard)
     @UseInterceptors(FileInterceptor('file'))
     @Post('renter-kyc')
     async kycRenter(
@@ -192,6 +193,8 @@ export class AuthenticationController {
     ) {
 
         const userId = request.user['data']['user']['id'];
+
+
 
         // Access additional form fields
         const address = body.address;
