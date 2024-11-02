@@ -261,7 +261,8 @@ export class AuthenticationController {
     @UseGuards(JwtAuthenticationGuard)
     @Post("kyc-product-owner")
     async kycBusiness(@Body() userData: BusinessKycDto, @Req() request: RequestWithUser, @Res() response: Response) {
-        const user = await this.authenticationService.kycBusiness(userData)
+        const userId = request.user['data']['user']['id'];
+        const user = await this.authenticationService.kycBusiness(userData, userId)
         return response.status(HttpStatus.ACCEPTED).json(user);
     }
 

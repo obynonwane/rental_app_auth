@@ -25,6 +25,8 @@ import { RenterKycService } from '../renter-kyc/renter-kyc.service';
 import { IdentityTypesService } from '../identity-types/identity-types.service';
 import IdentityType from '../identity-types/identity-types.entity';
 import { RenterKyc } from '../renter-kyc/renter-kyc.entity';
+import { BusinessKycService } from '../business-kyc/business-kyc.service';
+import { BusinessKyc } from '../business-kyc/business-kyc.entity';
 @Global()
 @Module({
   imports: [
@@ -66,7 +68,8 @@ import { RenterKyc } from '../renter-kyc/renter-kyc.entity';
       State,
       Lga,
       IdentityType,
-      RenterKyc
+      RenterKyc,
+      BusinessKyc
     ])
   ],
   providers: [
@@ -78,6 +81,7 @@ import { RenterKyc } from '../renter-kyc/renter-kyc.entity';
     CloudinaryService,
     RenterKycService,
     IdentityTypesService,
+    BusinessKycService
   ],
   controllers: [AuthenticationController],
   exports: [JwtStrategy, PassportModule],

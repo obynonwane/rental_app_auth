@@ -13,6 +13,7 @@ import RenterKycDto from '../_dtos/renter-kyc.dto';
 import { IdentityTypesService } from '../identity-types/identity-types.service';
 import { RenterKycService } from '../renter-kyc/renter-kyc.service';
 import BusinessKycDto from '../_dtos/business-kyc.dto';
+import { BusinessKycService } from '../business-kyc/business-kyc.service';
 
 @Injectable()
 export class AuthenticationService {
@@ -23,7 +24,8 @@ export class AuthenticationService {
         private readonly configService: ConfigService,
         private cloudinaryService: CloudinaryService,
         private identityTypesService: IdentityTypesService,
-        private renterKycService: RenterKycService
+        private renterKycService: RenterKycService,
+        private businessKycService: BusinessKycService
     ) { }
 
     public async getJwtToken(_user: LoginUserDto) {
@@ -98,7 +100,7 @@ export class AuthenticationService {
         return await this.identityTypesService.getAll()
     }
 
-    public async kycBusiness(detail: BusinessKycDto) {
-        console.log(detail)
+    public async kycBusiness(detail: BusinessKycDto, userId: string) {
+        return await this.businessKycService.createKyc(detail, userId)
     }
 }
