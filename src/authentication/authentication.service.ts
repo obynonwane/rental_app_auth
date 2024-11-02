@@ -12,6 +12,7 @@ import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import RenterKycDto from '../_dtos/renter-kyc.dto';
 import { IdentityTypesService } from '../identity-types/identity-types.service';
 import { RenterKycService } from '../renter-kyc/renter-kyc.service';
+import BusinessKycDto from '../_dtos/business-kyc.dto';
 
 @Injectable()
 export class AuthenticationService {
@@ -95,5 +96,9 @@ export class AuthenticationService {
 
     public async retriveIdentificationTypes() {
         return await this.identityTypesService.getAll()
+    }
+
+    public async kycBusiness(detail: BusinessKycDto) {
+        console.log(detail)
     }
 }

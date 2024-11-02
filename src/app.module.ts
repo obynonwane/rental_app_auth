@@ -25,6 +25,7 @@ import { StateModule } from './state/state.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { RenterKycModule } from './renter-kyc/renter-kyc.module';
 import { IdentityTypesModule } from './identity-types/identity-types.module';
+import { BusinessKycModule } from './business-kyc/business-kyc.module';
 
 
 
@@ -62,6 +63,7 @@ import { IdentityTypesModule } from './identity-types/identity-types.module';
     CloudinaryModule,
     RenterKycModule,
     IdentityTypesModule,
+    BusinessKycModule,
   ],
   controllers: [],
   providers: [],

@@ -13,9 +13,10 @@ import * as path from 'path';
 
 import * as fs from 'fs';
 import { v4 as uuidv4 } from 'uuid'; // For generating unique filenames
-import * as mime from 'mime-types'; // Import mime-types package
+
 import RenterKycDto from 'src/_dtos/renter-kyc.dto';
 import { IsRenterGuard } from './guards/is-renter.guard';
+import { BusinessKycDto } from '../_dtos/business-kyc.dto';
 
 //
 @Controller('authentication')
@@ -31,6 +32,7 @@ export class AuthenticationController {
         const user = await this.authenticationService.createUser(userData)
         return response.status(HttpStatus.ACCEPTED).json(user);
     }
+
 
     @HttpCode(200)
     @Post('login')
@@ -252,6 +254,15 @@ export class AuthenticationController {
                 data: targetPath,
             },
         });
+    }
+
+
+    @HttpCode(201)
+    @UseGuards(JwtAuthenticationGuard)
+    @Post("kyc-product-owner")
+    async kycBusiness(@Body() userData: BusinessKycDto, @Req() request: RequestWithUser, @Res() response: Response) {
+        const user = await this.authenticationService.kycBusiness(userData)
+        return response.status(HttpStatus.ACCEPTED).json(user);
     }
 
 
