@@ -9,12 +9,18 @@ import Lga from 'src/lga/lga.entity';
 @Entity({ name: 'renter_kycs' })
 @Unique(['user']) // Enforces unique constraint on user
 export class RenterKyc {
-  
+
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ type: 'varchar' })
   address: string;
+
+  @Column({ type: 'varchar' })
+  uploaded_image: string;
+  
+  @Column({ type: 'varchar' })
+  identity_number: string;
 
   @ManyToOne(() => IdentityType, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'identity_type_id' })
@@ -36,9 +42,9 @@ export class RenterKyc {
   @JoinColumn({ name: 'lga_id' })
   lga: Lga;
 
-  @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
-  updatedAt: Date;
+  @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)', onUpdate: 'CURRENT_TIMESTAMP(6)' })
+  public updated_at: Date;
 
-  @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
-  createdAt: Date;
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
+  public created_at: Date;
 }

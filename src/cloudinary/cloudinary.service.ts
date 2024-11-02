@@ -3,11 +3,21 @@ import { v2 as cloudinary, UploadApiResponse, UploadApiErrorResponse } from 'clo
 import RenterKycDto from '../_dtos/renter-kyc.dto';
 import { promises as fs } from 'fs';
 import * as path from 'path';
+import { Repository } from 'typeorm';
+import { RenterKyc } from '../renter-kyc/renter-kyc.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import User from '../user/user.entity';
 
 @Injectable()
 export class CloudinaryService {
 
-    constructor() {
+    constructor(
+        @InjectRepository(RenterKyc)
+        private renterKycRepository: Repository<RenterKyc>,
+
+        @InjectRepository(User)
+        private userRepository: Repository<User>,
+    ) {
         // Initialize Cloudinary with your credentials
         cloudinary.config({
             cloud_name: process.env.CLOUDINARY_CLOUD_NAME, // Your Cloudinary cloud name
@@ -17,10 +27,10 @@ export class CloudinaryService {
     }
 
 
-    async uploadRenterKyc(filePath: RenterKycDto): Promise<UploadApiResponse | UploadApiErrorResponse> {
+    async uploadRenterKyc(detail: RenterKycDto): Promise<UploadApiResponse | UploadApiErrorResponse> {
         try {
             return new Promise((resolve, reject) => {
-                const storagePath = filePath.targetPath // Ensure the correct path
+                const storagePath = detail.targetPath // Ensure the correct path
 
 
                 // Determine resource_type based on file extension
@@ -42,8 +52,23 @@ export class CloudinaryService {
                             return reject(error);
                         }
 
-                        console.log('Cloudinary upload result:', result); // Log the result here
 
+                        // create the kyc
+                        const userExist = await this.renterKycRepository.findOne({ where: { user: { id: detail.userId } } })
+                        if (!userExist) {
+                            const kyc = this.renterKycRepository.create({
+                                address: detail.address,
+                                uploaded_image: result.secure_url,
+                                identity_number: detail.idNumber,
+                                identityType: { id: detail.idType },
+                                user: { id: detail.userId },
+                                country: { id: detail.addressCountry },
+                                state: { id: detail.addressState },
+                                lga: { id: detail.addressLga },
+                            });
+
+                            await this.renterKycRepository.save(kyc)
+                        }
                         // Attempt to delete the file after successful upload
                         try {
                             await fs.unlink(storagePath); // Delete the local file

@@ -7,6 +7,7 @@ export class RenterKycDto {
     addressLga: string;
     uniqueFileName: string;
     targetPath: string;
+    userId: string;
 }
 
 export default RenterKycDto;

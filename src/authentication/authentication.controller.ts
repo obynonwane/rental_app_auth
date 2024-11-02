@@ -190,8 +190,8 @@ export class AuthenticationController {
         @Req() request: RequestWithUser,
         @Res() response: Response
     ) {
-        // Debug: Log the original filename
-        console.log('Original filename:', file.originalname);
+
+        const userId = request.user['data']['user']['id'];
 
         // Access additional form fields
         const address = body.address;
@@ -234,6 +234,7 @@ export class AuthenticationController {
             addressLga,
             uniqueFileName,
             targetPath,
+            userId,
         }
 
 
@@ -255,7 +256,7 @@ export class AuthenticationController {
     @UseGuards(JwtAuthenticationGuard)
     @Get('retrieve-identification-types')
     async retriveIdentificationTypes(@Req() request: RequestWithUser, @Res() response: Response) {
-        console.log("reached here")
+
         const result = await this.authenticationService.retriveIdentificationTypes()
         return response.status(HttpStatus.ACCEPTED).json({
             error: false,
