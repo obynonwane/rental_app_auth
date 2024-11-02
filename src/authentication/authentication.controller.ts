@@ -17,6 +17,7 @@ import { v4 as uuidv4 } from 'uuid'; // For generating unique filenames
 import RenterKycDto from 'src/_dtos/renter-kyc.dto';
 import { IsRenterGuard } from './guards/is-renter.guard';
 import { BusinessKycDto } from '../_dtos/business-kyc.dto';
+import { IsProductOwnerGuard } from './guards/is-product-owner.guard';
 
 //
 @Controller('authentication')
@@ -196,8 +197,6 @@ export class AuthenticationController {
 
         const userId = request.user['data']['user']['id'];
 
-
-
         // Access additional form fields
         const address = body.address;
         const idNumber = body.id_number;
@@ -205,8 +204,6 @@ export class AuthenticationController {
         const addressCountry = body.address_country;
         const addressState = body.address_state;
         const addressLga = body.address_lga;
-
-
 
         // Define the target directory relative to the project root
         // Use process.cwd() to get the project root directory
@@ -258,7 +255,7 @@ export class AuthenticationController {
 
 
     @HttpCode(201)
-    @UseGuards(JwtAuthenticationGuard)
+    @UseGuards(JwtAuthenticationGuard, IsProductOwnerGuard)
     @Post("kyc-product-owner")
     async kycBusiness(@Body() userData: BusinessKycDto, @Req() request: RequestWithUser, @Res() response: Response) {
         const userId = request.user['data']['user']['id'];
