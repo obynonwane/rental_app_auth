@@ -1,28 +1,4 @@
 # Base image
-# FROM --platform=linux/amd64 node:18
-
-# # Create app directory
-# WORKDIR /app
-
-# # Copy package.json and yarn.lock to the container
-# COPY package.json package-lock.json ./
-
-# # Install app dependencies using yarn
-# RUN npm install --frozen-lockfile
-
-# # Bundle app source
-# COPY . .
-
-# # Copy only the build artifacts to the container
-# COPY ./dist /app/dist
-
-# # Expose the port on which the app will run
-# EXPOSE 5001
-
-# # Start the server using the production build
-# CMD ["npm", "run", "start:dev"]
-
-# Base image
 FROM --platform=linux/amd64 node:18 AS build
 
 # Install dependencies necessary for building native modules
@@ -48,7 +24,7 @@ RUN npm run build
 
 # Copy only the build artifacts to the runtime container
 # (adjust according to your actual build output)
-COPY ./dist /app/dist
+# COPY ./dist /app/dist
 
 # Base image for the runtime
 FROM --platform=linux/amd64 node:18-alpine

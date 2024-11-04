@@ -141,6 +141,60 @@ export class UserService {
         }
 
     }
+    public async signupAdmin(userData: CreateUserDto) {
+        try {
+
+            const newUser = this.userRepository.create({
+                first_name: userData.first_name,
+                last_name: userData.last_name,
+                email: userData.email,
+                phone: userData.phone,
+                password: await this.createPasswordHash(userData.password)
+            });
+            const user = await this.userRepository.save(newUser);
+
+            const token = await this.emailVerificationTokenService.createEmailverificationToken(userData.email)
+
+
+            const data = {
+                email: user.email,
+                phone: user.phone,
+                email_verification_token: token.token,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                verified: user.verified,
+                verification_link: `${process.env.ROOT_URL}` + '?token=' + `${token.token}`
+            }
+
+            //send email verification mail - rabbitmq
+            this.rabbitClient.emit('log.INFO', { name: 'auth', data: data })
+
+            //make a request to logger service with the payload to submit logging - rabbitmQ
+            this.rabbitClient.emit('log.INFO', { name: 'log', data: data })
+
+
+
+            const adminUser: CreateUserRoleDto = {
+                user_type: UserType.ADMIN
+            }
+            // assign role
+            await this.chooseRole(adminUser, user)
+
+            return {
+                error: false,
+                statusCode: HttpStatus.ACCEPTED,
+                message: "user account created",
+            }
+
+
+        } catch (error) {
+            if (error?.code == PostgresErrorCode.UniqueViolation) {
+                throw new CustomHttpException('user email already exist', HttpStatus.BAD_REQUEST, { statusCode: HttpStatus.BAD_REQUEST, error: true, });
+            }
+            throw new CustomHttpException('error creating user', HttpStatus.INTERNAL_SERVER_ERROR, { statusCode: HttpStatus.INTERNAL_SERVER_ERROR, error: true });
+        }
+
+    }
 
     public async verifyEmail(token: string): Promise<{ message: string, error: boolean, status_code: number }> {
         return await this.emailVerificationTokenService.verifyEmail(token)
@@ -185,7 +239,7 @@ export class UserService {
 
 
 
-    public async chooseRole(payload: CreateUserRoleDto, _user: any) {
+    public async chooseRole(payload: CreateUserRoleDto, _user: User) {
 
         // do type assertion 
         const selectedType = payload.user_type as UserType

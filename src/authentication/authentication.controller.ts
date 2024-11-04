@@ -34,6 +34,12 @@ export class AuthenticationController {
         return response.status(HttpStatus.ACCEPTED).json(user);
     }
 
+    @Post("/admin/signup")
+    async signupAdmin(@Body() userData: CreateUserDto, @Res() response: Response) {
+        const user = await this.authenticationService.signupAdmin(userData)
+        return response.status(HttpStatus.ACCEPTED).json(user);
+    }
+
 
     @HttpCode(200)
     @Post('login')

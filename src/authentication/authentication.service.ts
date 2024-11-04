@@ -46,6 +46,9 @@ export class AuthenticationService {
     async createUser(userData: CreateUserDto) {
         return await this.userService.create(userData)
     }
+    async signupAdmin(userData: CreateUserDto) {
+        return await this.userService.signupAdmin(userData)
+    }
     async productOwnerCreateStaff(userData: CreateUserDto, user: any) {
         return await this.userService.productOwnerCreateStaff(userData, user)
     }
