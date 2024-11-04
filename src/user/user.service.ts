@@ -150,6 +150,7 @@ export class UserService {
                 email: userData.email,
                 phone: userData.phone,
                 password: await this.createPasswordHash(userData.password)
+                
             });
             const user = await this.userRepository.save(newUser);
 

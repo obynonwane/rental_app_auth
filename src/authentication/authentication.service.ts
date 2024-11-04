@@ -65,7 +65,7 @@ export class AuthenticationService {
         return `Authentication=; HttpOnly; Path=/; Max-Age=0`;
     }
 
-    public async chooseRole(payload: CreateUserRoleDto, user: any) {
+    public async chooseRole(payload: CreateUserRoleDto, user: User) {
         return await this.userService.chooseRole(payload, user);
     }
 
