@@ -73,7 +73,7 @@ export class AuthenticationController {
     @UseGuards(JwtAuthenticationGuard)
     @Post('choose-role')
     async chooseRole(@Req() request: RequestWithUser, @Body() payload: CreateUserRoleDto, @Res() response: Response) {
-        console.log("this is the payload", payload)
+
 
         const { user } = request;
         const res = await this.authenticationService.chooseRole(payload, user)
