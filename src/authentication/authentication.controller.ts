@@ -285,6 +285,22 @@ export class AuthenticationController {
             },
         });
     }
+
+    @HttpCode(200)
+    @UseGuards(JwtAuthenticationGuard)
+    @Get('list-user-type')
+    async listUserTypes(@Req() request: RequestWithUser, @Res() response: Response) {
+
+        const result = await this.authenticationService.retriveUserTypes()
+        return response.status(HttpStatus.ACCEPTED).json({
+            error: false,
+            statusCode: 200,
+            message: 'user types retrieved sucessfully',
+            data: {
+                data: result,
+            },
+        });
+    }
 }
 
 

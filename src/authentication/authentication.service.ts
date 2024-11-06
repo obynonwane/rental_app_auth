@@ -14,6 +14,7 @@ import { IdentityTypesService } from '../identity-types/identity-types.service';
 import { RenterKycService } from '../renter-kyc/renter-kyc.service';
 import BusinessKycDto from '../_dtos/business-kyc.dto';
 import { BusinessKycService } from '../business-kyc/business-kyc.service';
+import { UserTypeArray } from '../_enums/user-type.enum';
 
 @Injectable()
 export class AuthenticationService {
@@ -105,5 +106,19 @@ export class AuthenticationService {
 
     public async kycBusiness(detail: BusinessKycDto, userId: string) {
         return await this.businessKycService.createKyc(detail, userId)
+    }
+
+    public async retriveUserTypes() {
+
+        const userTypes = {}
+
+
+        const mappedArr = UserTypeArray.map(x => {
+            if (x == "renter" || x == "product_owner") { userTypes[x] = x.replace(/_/g, " ") }
+        }
+        );
+
+        return userTypes
+
     }
 }
