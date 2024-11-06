@@ -15,7 +15,7 @@ import { UtilitiesModule } from './utilities/utilities.module';
 import { UserRoleModule } from './user-role/user-role.module';
 import { RoleModule } from './role/role.module';
 import { PermissionModule } from './permission/permission.module';
-import { ProductOwnerStaffModule } from './product-owner-staff/product-owner-staff.module';
+import { ParticipantStaffModule } from './participant-staff/participant-staff.module';
 import { MetricsModule } from './metrics/metrics.module';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { UserPermissionModule } from './user-permission/user-permission.module';
@@ -54,7 +54,7 @@ import { BusinessKycModule } from './business-kyc/business-kyc.module';
     UserRoleModule,
     RoleModule,
     PermissionModule,
-    ProductOwnerStaffModule,
+    ParticipantStaffModule,
     MetricsModule,
     UserPermissionModule,
     CountryModule,

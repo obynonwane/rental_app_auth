@@ -2,13 +2,13 @@ import { Injectable, CanActivate, ExecutionContext, HttpException, HttpStatus } 
 import { UserType } from '../../_enums/user-type.enum';
 
 @Injectable()
-export class IsRenterGuard implements CanActivate {
+export class IsParticiapntGuard implements CanActivate {
     canActivate(context: ExecutionContext): boolean {
         const request = context.switchToHttp().getRequest();
         const roleArray = request.user?.data?.roles;
 
         // Check if roles exist and include "RENTER"
-        if (!roleArray || !roleArray.includes(UserType.RENTER)) {
+        if (!roleArray || !roleArray.includes(UserType.PARTICIPANT)) {
             throw new HttpException(
                 {
                     error: true,

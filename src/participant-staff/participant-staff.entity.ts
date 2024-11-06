@@ -1,13 +1,13 @@
 import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import User from '../user/user.entity';
 
-@Entity({ name: 'product_owner_staffs' })
-class ProductOwnerStaff {
+@Entity({ name: 'participant_staffs' })
+class ParticipantStaff {
     @PrimaryGeneratedColumn('uuid')
     public id: string;
 
     @ManyToOne(() => User)
-    @JoinColumn({ name: 'product_owner_id' })
+    @JoinColumn({ name: 'participant_id' })
     public productOwner: User;
 
     @ManyToOne(() => User)
@@ -21,4 +21,4 @@ class ProductOwnerStaff {
     public updated_at: Date;
 }
 
-export default ProductOwnerStaff;
+export default ParticipantStaff;

@@ -15,7 +15,7 @@ import Role from '../role/role.entity';
 import Permission from '../permission/permission.entity';
 import { JsonResponse } from './respose-interface';
 import { UserType, UserTypeArray } from "../_enums/user-type.enum"
-import ProductOwnerStaff from "../product-owner-staff/product-owner-staff.entity"
+import ProductOwnerStaff from "../participant-staff/participant-staff.entity"
 import AssignUserPermissionDto from '../_dtos/assign-permission.dto';
 import UserPermission from '../user-permission/user-permission.entity';
 import Country from '../country/country.entity';
@@ -150,7 +150,7 @@ export class UserService {
                 email: userData.email,
                 phone: userData.phone,
                 password: await this.createPasswordHash(userData.password)
-                
+
             });
             const user = await this.userRepository.save(newUser);
 
@@ -297,7 +297,7 @@ export class UserService {
     }
 
     public async productOwnerPermission(user: User) {
-        const role = await this.roleRepository.findOne({ where: { name: 'product_owner' }, relations: ['permissions'], });
+        const role = await this.roleRepository.findOne({ where: { name: 'participant' }, relations: ['permissions'], });
         // Construct the response
         const response: JsonResponse = {
             error: false,
@@ -320,8 +320,8 @@ export class UserService {
 
         console.log(userRoles)
 
-        // Check if the user has the role 'PRODUCT_OWNER'
-        const isProductOwner = userRoles.includes(UserType.PRODUCT_OWNER);
+        // Check if the user has the role 'PARTICIPANT'
+        const isProductOwner = userRoles.includes(UserType.PARTICIPANT);
 
         if (!isProductOwner) {
             throw new CustomHttpException(
@@ -363,20 +363,20 @@ export class UserService {
                 phone: userData.phone,
                 password: await this.createPasswordHash(userData.password),
             });
-            // save the new product_owner_staff user
+            // save the new participant_staff user
             const staffUser = await transactionalEntityManager.save(User, newUser);
 
-            // Assign the 'product_owner_staff' role to the new user
-            const productOwnerStaffRole = await transactionalEntityManager.findOne(Role, { where: { name: UserType.PRODUCT_OWNER_STAFF } });
+            // Assign the 'participant_staff' role to the new user
+            const productOwnerStaffRole = await transactionalEntityManager.findOne(Role, { where: { name: UserType.PATICIPANT_STAFF } });
             if (!productOwnerStaffRole) {
                 throw new CustomHttpException(
-                    'Role "product_owner_staff" not found',
+                    'Role "participant_staff" not found',
                     HttpStatus.NOT_FOUND,
                     { statusCode: HttpStatus.NOT_FOUND, error: true }
                 );
             }
 
-            // Assign the 'product_owner_staff' role to the new user
+            // Assign the 'participant_staff' role to the new user
             if (!staffUser.roles) {
                 staffUser.roles = [productOwnerStaffRole];
             } else {
@@ -431,7 +431,7 @@ export class UserService {
         try {
 
             // 1. check if user have permission
-            if (!user.data.roles.includes(UserType.PRODUCT_OWNER)) {
+            if (!user.data.roles.includes(UserType.PARTICIPANT)) {
                 throw new CustomHttpException(
                     `user have no authorization to assign permission`,
                     HttpStatus.UNAUTHORIZED,

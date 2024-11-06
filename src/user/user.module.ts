@@ -8,7 +8,7 @@ import EmailVerificationToken from '../email-verification-token/email-verificati
 import { Utility } from '../utilities/utility';
 import Role from '../role/role.entity';
 import Permission from '../permission/permission.entity';
-import ProductOwnerStaff from '../product-owner-staff/product-owner-staff.entity';
+import ProductOwnerStaff from '../participant-staff/participant-staff.entity';
 import UserPermission from '../user-permission/user-permission.entity';
 import Country from '../country/country.entity';
 import State from '../state/state.entity';

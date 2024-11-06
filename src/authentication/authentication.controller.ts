@@ -15,7 +15,7 @@ import * as fs from 'fs';
 import { v4 as uuidv4 } from 'uuid'; // For generating unique filenames
 
 import RenterKycDto from 'src/_dtos/renter-kyc.dto';
-import { IsRenterGuard } from './guards/is-renter.guard';
+import { IsParticiapntGuard } from './guards/is-renter.guard';
 import { BusinessKycDto } from '../_dtos/business-kyc.dto';
 import { IsProductOwnerGuard } from './guards/is-product-owner.guard';
 
@@ -191,7 +191,7 @@ export class AuthenticationController {
 
 
     @HttpCode(200)
-    @UseGuards(JwtAuthenticationGuard, IsRenterGuard)
+    @UseGuards(JwtAuthenticationGuard, IsParticiapntGuard)
     @UseInterceptors(FileInterceptor('file'))
     @Post('renter-kyc')
     async kycRenter(
@@ -262,7 +262,7 @@ export class AuthenticationController {
 
     @HttpCode(201)
     @UseGuards(JwtAuthenticationGuard, IsProductOwnerGuard)
-    @Post("kyc-product-owner")
+    @Post("kyc-participant")
     async kycBusiness(@Body() userData: BusinessKycDto, @Req() request: RequestWithUser, @Res() response: Response) {
         const userId = request.user['data']['user']['id'];
         const user = await this.authenticationService.kycBusiness(userData, userId)

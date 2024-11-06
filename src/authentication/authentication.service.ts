@@ -113,10 +113,12 @@ export class AuthenticationService {
         const userTypes = {}
 
 
-        const mappedArr = UserTypeArray.map(x => {
-            if (x == "renter" || x == "product_owner") { userTypes[x] = x.replace(/_/g, " ") }
+        UserTypeArray.map(x => {
+            if (x == "participant") { userTypes[x] = x.replace(/_/g, " ") }
         }
         );
+
+
 
         return userTypes
 

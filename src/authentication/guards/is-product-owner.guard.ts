@@ -7,13 +7,13 @@ export class IsProductOwnerGuard implements CanActivate {
         const request = context.switchToHttp().getRequest();
         const roleArray = request.user?.data?.roles;
 
-        // Check if roles exist and include "RENTER"
-        if (!roleArray || !roleArray.includes(UserType.PRODUCT_OWNER)) {
+        // Check if roles exist and include "PARTICIPANT"
+        if (!roleArray || !roleArray.includes(UserType.PARTICIPANT)) {
             throw new HttpException(
                 {
                     error: true,
                     statusCode: HttpStatus.FORBIDDEN,
-                    message: 'User is not a product owner',
+                    message: 'User is not a participant',
                     data: {},
                 },
                 HttpStatus.FORBIDDEN,

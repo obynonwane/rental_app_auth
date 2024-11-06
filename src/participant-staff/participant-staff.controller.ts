@@ -1,4 +1,4 @@
 import { Controller } from '@nestjs/common';
 
 @Controller('product-owner-staff')
-export class ProductOwnerStaffController {}
+export class ParticipantStaffController { }
