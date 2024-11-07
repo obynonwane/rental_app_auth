@@ -29,9 +29,6 @@ class User {
     @Column({ default: false })
     public verified: boolean;
 
-    @Column({ default: true })
-    public first_time_login: boolean;
-
     @ManyToMany(() => Role, role => role.users, { cascade: true })
     @JoinTable({
         name: 'user_roles',

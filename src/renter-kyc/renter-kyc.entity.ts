@@ -18,7 +18,7 @@ export class RenterKyc {
 
   @Column({ type: 'varchar' })
   uploaded_image: string;
-  
+
   @Column({ type: 'varchar' })
   identity_number: string;
 
@@ -41,6 +41,9 @@ export class RenterKyc {
   @ManyToOne(() => Lga, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'lga_id' })
   lga: Lga;
+
+  @Column({ default: false })
+  public verified: boolean;
 
   @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)', onUpdate: 'CURRENT_TIMESTAMP(6)' })
   public updated_at: Date;

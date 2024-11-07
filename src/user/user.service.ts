@@ -281,14 +281,10 @@ export class UserService {
         // Assign the role to the user
         user.roles.push(role);
 
-        // change the first_time_login = false
-        user.first_time_login = false;
-
         // Save the updated user entity
         return await this.userRepository.save(user);
 
     }
-
 
 
 

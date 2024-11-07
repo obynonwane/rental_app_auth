@@ -72,6 +72,7 @@ export class BusinessKycService {
             state: kyc.state,     // Include full state details
             lga: kyc.lga,         // Include full LGA details
             user: kyc.user,       // Include full user details
+            verified: kyc.verified
         };
     }
 }
