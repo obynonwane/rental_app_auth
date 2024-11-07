@@ -49,7 +49,7 @@ export class EmailVerificationTokenService {
 
             if (tokenEntity?.expired) {
                 return {
-                    "message": `Token expired`,
+                    "message": `email verification token expired`,
                     error: false,
                     status_code: 400,
                 }

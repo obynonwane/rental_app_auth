@@ -75,25 +75,7 @@ export class AuthenticationController {
         return response.status(HttpStatus.ACCEPTED).json(user);
     }
 
-    @HttpCode(200)
-    @UseGuards(JwtAuthenticationGuard)
-    @Post('choose-role')
-    async chooseRole(@Req() request: RequestWithUser, @Body() payload: CreateUserRoleDto, @Res() response: Response) {
 
-
-        const { user } = request;
-        const res = await this.authenticationService.chooseRole(payload, user)
-
-        return response.status(HttpStatus.ACCEPTED).json(
-            {
-                error: false,
-                statusCode: 200,
-                message: 'role added successfully',
-                data: {
-                    data: res,
-                }
-            });
-    }
 
 
 
@@ -116,7 +98,7 @@ export class AuthenticationController {
 
     @Get('verify-email')
     async verifyEmail(@Query('token') token: string, @Req() request: RequestWithUser, @Res() response: Response) {
-        console.log("welcome here")
+
         const data = await this.authenticationService.verifyEmail(token)
         let status = data.error == true ? HttpStatus.ACCEPTED : HttpStatus.BAD_REQUEST
         return response.status(status).json(

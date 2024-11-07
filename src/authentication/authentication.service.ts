@@ -105,7 +105,7 @@ export class AuthenticationService {
     public async retriveUserTypes() {
         const userTypes = {}
         UserTypeArray.map(x => {
-            if (x == "participant") { userTypes[x] = x.replace(/_/g, " ") }
+            if (x == "participant" || x == "participant_staff") { userTypes[x] = x.replace(/_/g, " ") }
         }
         );
         return userTypes
