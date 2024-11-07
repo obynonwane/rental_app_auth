@@ -7,9 +7,7 @@ import { EmailVerificationTokenService } from '../email-verification-token/email
 import EmailVerificationToken from '../email-verification-token/email-verification-token.entity';
 import { Utility } from '../utilities/utility';
 import Role from '../role/role.entity';
-import Permission from '../permission/permission.entity';
 import ProductOwnerStaff from '../participant-staff/participant-staff.entity';
-import UserPermission from '../user-permission/user-permission.entity';
 import Country from '../country/country.entity';
 import State from '../state/state.entity';
 import Lga from '../lga/lga.entity';
@@ -32,7 +30,7 @@ import Lga from '../lga/lga.entity';
         },
       },
     ]),
-    TypeOrmModule.forFeature([User, EmailVerificationToken, Role, Permission, ProductOwnerStaff, UserPermission, Country, State, Lga])],
+    TypeOrmModule.forFeature([User, EmailVerificationToken, Role, ProductOwnerStaff, Country, State, Lga])],
   providers: [UserService, EmailVerificationTokenService, Utility]
 })
 export class UserModule { }

@@ -14,9 +14,9 @@ import { EmailVerificationTokenService } from '../email-verification-token/email
 import EmailVerificationToken from '../email-verification-token/email-verification-token.entity';
 import { Utility } from '../utilities/utility';
 import Role from '../role/role.entity';
-import Permission from '../permission/permission.entity';
+
 import ProductOwnerStaff from '../participant-staff/participant-staff.entity';
-import UserPermission from '../user-permission/user-permission.entity';
+
 import Country from '../country/country.entity';
 import State from '../state/state.entity';
 import Lga from '../lga/lga.entity';
@@ -61,9 +61,7 @@ import { BusinessKyc } from '../business-kyc/business-kyc.entity';
       User,
       EmailVerificationToken,
       Role,
-      Permission,
       ProductOwnerStaff,
-      UserPermission,
       Country,
       State,
       Lga,

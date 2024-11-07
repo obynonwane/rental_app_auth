@@ -14,11 +14,11 @@ import { EmailVerificationTokenModule } from './email-verification-token/email-v
 import { UtilitiesModule } from './utilities/utilities.module';
 import { UserRoleModule } from './user-role/user-role.module';
 import { RoleModule } from './role/role.module';
-import { PermissionModule } from './permission/permission.module';
+
 import { ParticipantStaffModule } from './participant-staff/participant-staff.module';
 import { MetricsModule } from './metrics/metrics.module';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
-import { UserPermissionModule } from './user-permission/user-permission.module';
+
 import { CountryModule } from './country/country.module';
 import { LgaModule } from './lga/lga.module';
 import { StateModule } from './state/state.module';
@@ -53,10 +53,8 @@ import { BusinessKycModule } from './business-kyc/business-kyc.module';
     UtilitiesModule,
     UserRoleModule,
     RoleModule,
-    PermissionModule,
     ParticipantStaffModule,
     MetricsModule,
-    UserPermissionModule,
     CountryModule,
     LgaModule,
     StateModule,

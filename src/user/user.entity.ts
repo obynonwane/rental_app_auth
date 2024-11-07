@@ -2,7 +2,7 @@
 import Role from "../role/role.entity";
 import { UserType } from "../_enums/user-type.enum";
 import { Column, Entity, Index, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
-import UserPermission from "src/user-permission/user-permission.entity";
+
 
 @Entity({ name: "users" })
 class User {
@@ -32,7 +32,6 @@ class User {
     @Column({ default: true })
     public first_time_login: boolean;
 
-
     @ManyToMany(() => Role, role => role.users, { cascade: true })
     @JoinTable({
         name: 'user_roles',
@@ -40,9 +39,6 @@ class User {
         inverseJoinColumn: { name: 'role_id', referencedColumnName: 'id' }
     })
     public roles: Role[];
-
-    @OneToMany(() => UserPermission, userPermission => userPermission.user)
-    public permissions: UserPermission[];
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
     public created_at: Date;

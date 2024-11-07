@@ -12,19 +12,14 @@ import { EmailVerificationTokenService } from '../email-verification-token/email
 import EmailVerificationToken from '../email-verification-token/email-verification-token.entity';
 import CreateUserRoleDto from '../_dtos/create-role.dto';
 import Role from '../role/role.entity';
-import Permission from '../permission/permission.entity';
+
 import { JsonResponse } from './respose-interface';
 import { UserType, UserTypeArray } from "../_enums/user-type.enum"
 import ProductOwnerStaff from "../participant-staff/participant-staff.entity"
-import UserPermission from '../user-permission/user-permission.entity';
+
 import Country from '../country/country.entity';
 import State from '../state/state.entity';
 import Lga from '../lga/lga.entity';
-
-
-
-
-
 
 
 const configService = new ConfigService();
@@ -41,14 +36,8 @@ export class UserService {
         @InjectRepository(Role)
         private roleRepository: Repository<Role>,
 
-        @InjectRepository(Permission)
-        private permissionRepository: Repository<Permission>,
-
         @InjectRepository(ProductOwnerStaff)
         private productOwnerStaffRepository: Repository<ProductOwnerStaff>,
-
-        @InjectRepository(UserPermission)
-        private userPermissionRepository: Repository<UserPermission>,
 
         @InjectRepository(Country)
         private countryRepository: Repository<Country>,
@@ -218,25 +207,24 @@ export class UserService {
     public async getById(id: string) {
         console.log("this is the method")
 
-        // Retrieve the user from the database, including roles and permissions
+        // Retrieve the user from the database, including roles
         const user = await this.userRepository.findOne({
             where: { id: id },
-            relations: ['roles', 'roles.permissions'], // Load roles and permissions
+            relations: ['roles'], // Load roles 
         });
 
         if (!user) {
             throw new CustomHttpException('user with this id does not exist', HttpStatus.NOT_FOUND, { statusCode: HttpStatus.NOT_FOUND, error: true });
         }
 
-        // Extract roles and permissions
+        // Extract roles 
         const roles: string[] = user.roles.map(role => role.name);
-        const permissions: string[] = user.roles.flatMap(role => role.permissions.map(permission => permission.name));
+
 
         // Construct the response
         const response = {
             user,         // Include the original user object
             roles,        // Include the extracted roles array
-            permissions,  // Include the extracted permissions array
         }
 
         // Return the new response
@@ -301,34 +289,18 @@ export class UserService {
 
     }
 
-    public async productOwnerPermission(user: User) {
-        const role = await this.roleRepository.findOne({ where: { name: 'participant' }, relations: ['permissions'], });
-        // Construct the response
-        const response: JsonResponse = {
-            error: false,
-            message: 'Permissions retrieved succesfully',
-            statusCode: HttpStatus.OK,
-            data: {
-                role,
-            }
-        };
 
-
-        // Return the new response
-        return response;
-    }
 
 
     public async participantCreateStaff(userData: CreateUserDto, _user: any) {
         // Extract the user roles
         const userRoles = _user.data.roles;
 
-        console.log(userRoles)
 
         // Check if the user has the role 'PARTICIPANT'
-        const isProductOwner = userRoles.includes(UserType.PARTICIPANT);
+        const isParticipant = userRoles.includes(UserType.PARTICIPANT);
 
-        if (!isProductOwner) {
+        if (!isParticipant) {
             throw new CustomHttpException(
                 'User does not have permission to create staff',
                 HttpStatus.FORBIDDEN,
@@ -475,7 +447,6 @@ export class UserService {
 
 
     public async getStateLgas(id: string) {
-
         const response: JsonResponse = {
             error: false,
             message: 'state lgas retrived succesfully',

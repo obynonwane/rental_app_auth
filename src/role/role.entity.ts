@@ -1,5 +1,5 @@
 
-import Permission from '../permission/permission.entity';
+
 import User from '../user/user.entity';
 import { Column, Entity, Index, JoinTable, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
@@ -13,20 +13,6 @@ class Role {
 
     @ManyToMany(() => User, user => user.roles)
     public users: User[];
-
-    @ManyToMany(() => Permission, permission => permission.roles)
-    @JoinTable({
-        name: 'role_permissions',
-        joinColumn: {
-            name: 'role_id',
-            referencedColumnName: 'id',
-        },
-        inverseJoinColumn: {
-            name: 'permission_id',
-            referencedColumnName: 'id',
-        },
-    })
-    permissions: Permission[];
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
     public created_at: Date;

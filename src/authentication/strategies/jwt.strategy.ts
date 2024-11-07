@@ -7,7 +7,7 @@ import User from '../../user/user.entity';
 import { JsonResponse, JwtPayload } from '../interfaces/jwt-payload.interface';
 import { UserService } from '../../user/user.service';
 import { ConfigService } from '@nestjs/config';
-import UserPermission from '../../user-permission/user-permission.entity';
+
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -15,7 +15,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     private readonly configService: ConfigService,
     private readonly userService: UserService,
     @InjectRepository(User) private userRepository: Repository<User>,
-    @InjectRepository(UserPermission) private userPermissionRepository: Repository<UserPermission>,
+
   ) {
     super({
       secretOrKey: configService.get('JWT_SECRET'),
@@ -29,28 +29,15 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
     const user = await this.userRepository.findOne({
       where: { id: userId },
-      relations: ['roles', 'roles.permissions'], // Load roles and permissions
+      relations: ['roles'], // Load roles
     });
-
-    const userPermissions = await this.userPermissionRepository.find({
-      where: { user: { id: user.id } },
-      relations: ['permission'],
-    })
-
-    // Extract permission names from UserPermission assigned by staff
-    const assignedPermissionNames = userPermissions.map(userPermission => userPermission.permission.name);
 
     if (!user) {
       throw new UnauthorizedException();
     }
 
-    // Extract roles and permissions
+    // Extract roles
     const roles: string[] = user.roles.map(role => role.name);
-    const permissions: string[] = user.roles.flatMap(role => role.permissions.map(permission => permission.name));
-
-
-    // merge role permission and assigned permission
-    const allPermissions = [...permissions, ...assignedPermissionNames];
 
     user.roles = undefined;
     user.password = undefined;
@@ -64,7 +51,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       data: {
         user,         // Include the original user object
         roles,        // Include the extracted roles array
-        permissions: allPermissions  // Include the extracted permissions array
       }
     };
 
@@ -72,6 +58,5 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     // Return the new response
     return response;
 
-    // return user;
   }
 }
