@@ -16,7 +16,6 @@ import Permission from '../permission/permission.entity';
 import { JsonResponse } from './respose-interface';
 import { UserType, UserTypeArray } from "../_enums/user-type.enum"
 import ProductOwnerStaff from "../participant-staff/participant-staff.entity"
-import AssignUserPermissionDto from '../_dtos/assign-permission.dto';
 import UserPermission from '../user-permission/user-permission.entity';
 import Country from '../country/country.entity';
 import State from '../state/state.entity';
@@ -125,6 +124,12 @@ export class UserService {
 
             //make a request to logger service with the payload to submit logging - rabbitmQ
             this.rabbitClient.emit('log.INFO', { name: 'log', data: data })
+
+            const userRole: CreateUserRoleDto = {
+                user_type: UserType.PARTICIPANT
+            }
+            // assign role
+            await this.chooseRole(userRole, user)
 
             return {
                 error: false,
@@ -314,7 +319,7 @@ export class UserService {
     }
 
 
-    public async productOwnerCreateStaff(userData: CreateUserDto, _user: any) {
+    public async participantCreateStaff(userData: CreateUserDto, _user: any) {
         // Extract the user roles
         const userRoles = _user.data.roles;
 
@@ -367,7 +372,7 @@ export class UserService {
             const staffUser = await transactionalEntityManager.save(User, newUser);
 
             // Assign the 'participant_staff' role to the new user
-            const productOwnerStaffRole = await transactionalEntityManager.findOne(Role, { where: { name: UserType.PATICIPANT_STAFF } });
+            const productOwnerStaffRole = await transactionalEntityManager.findOne(Role, { where: { name: UserType.PARTICIPANT_STAFF } });
             if (!productOwnerStaffRole) {
                 throw new CustomHttpException(
                     'Role "participant_staff" not found',
@@ -427,90 +432,7 @@ export class UserService {
     }
 
 
-    public async productOwnerAssignPermission(user: any, payload: AssignUserPermissionDto): Promise<JsonResponse> {
-        try {
 
-            // 1. check if user have permission
-            if (!user.data.roles.includes(UserType.PARTICIPANT)) {
-                throw new CustomHttpException(
-                    `user have no authorization to assign permission`,
-                    HttpStatus.UNAUTHORIZED,
-                    { statusCode: HttpStatus.UNAUTHORIZED, error: false }
-                );
-            }
-            // 2. Get the user 
-            const staff = await this.userRepository.findOne({ where: { id: payload.user_id } });
-            if (!staff) {
-                throw new CustomHttpException(
-                    `User with ID ${payload.user_id} not found.`,
-                    HttpStatus.NOT_FOUND,
-                    { statusCode: HttpStatus.NOT_FOUND, error: true }
-                );
-            }
-
-            // 3. Get the permission
-            const permission = await this.permissionRepository.findOne({ where: { id: payload.permission_id } });
-            if (!permission) {
-                throw new CustomHttpException(
-                    `Permission with ID ${payload.permission_id} not found.`,
-                    HttpStatus.NOT_FOUND,
-                    { statusCode: HttpStatus.NOT_FOUND, error: true }
-                );
-            }
-
-            // 4. Check if the user already has the permissions
-            const existingPermission = await this.userPermissionRepository.findOne({
-                where: {
-                    user: { id: payload.user_id },  // Assuming 'user' is a relation field
-                    permission: { id: payload.permission_id }  // Assuming 'permission' is a relation field
-                }
-            });
-
-
-            if (existingPermission) {
-                const response: JsonResponse = {
-                    error: true,
-                    message: 'User already has this permission',
-                    statusCode: HttpStatus.BAD_REQUEST,
-                    data: null
-                };
-                return response;
-            }
-
-            // 5. Assign the permission 
-            const new_permission = this.userPermissionRepository.create({
-                user: staff,
-                permission: permission
-            });
-
-            // Save the new permission assignment
-            await this.userPermissionRepository.save(new_permission);
-
-            new_permission.user.password = undefined;
-            // Successful response
-            const response: JsonResponse = {
-                error: false,
-                message: 'Permission assigned successfully',
-                statusCode: HttpStatus.OK,
-                data: new_permission,
-            };
-
-            return response;
-        } catch (error) {
-            // Log the error if needed (e.g., to a monitoring service)
-            console.error('Error during permission assignment:', error);
-
-            // Error response
-            const response: JsonResponse = {
-                error: true,
-                message: error.message || 'An error occurred while assigning the permission.',
-                statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-                data: null,
-            };
-
-            return response;
-        }
-    }
     public async getCountries() {
         const response: JsonResponse = {
             error: false,

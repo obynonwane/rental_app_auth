@@ -8,7 +8,7 @@ import JwtAuthenticationGuard from './jwt-authentication.guard';
 import { JwtExceptionFilter } from './filters/jwt-exception.filter';
 import CreateUserRoleDto from '../_dtos/create-role.dto';
 import LoginUserDto from '../_dtos/login-user.dto';
-import AssignUserPermissionDto from '../_dtos/assign-permission.dto';
+
 import * as path from 'path';
 
 import * as fs from 'fs';
@@ -95,31 +95,16 @@ export class AuthenticationController {
             });
     }
 
-    @HttpCode(200)
-    @UseGuards(JwtAuthenticationGuard)
-    @Get('product-owner-permissions')
-    async productOwnerPermission(@Req() request: RequestWithUser, @Res() response: Response) {
-        const { user } = request;
-        const role = await this.authenticationService.productOwnerPermission(user)
-        return response.status(HttpStatus.ACCEPTED).json(role);
-    }
+
+
+
 
     @HttpCode(200)
     @UseGuards(JwtAuthenticationGuard)
-    @Post('assign-permission')
-    async productOwnerAssignPermission(@Body() payload: AssignUserPermissionDto, @Req() request: RequestWithUser, @Res() response: Response) {
-
+    @Post('participant-create-staff')
+    async participantCreateStaff(@Body() userData: CreateUserDto, @Req() request: RequestWithUser, @Res() response: Response) {
         const { user } = request;
-        const result = await this.authenticationService.productOwnerAssignPermission(user, payload);
-        return response.status(HttpStatus.ACCEPTED).json(result);
-    }
-
-    @HttpCode(200)
-    @UseGuards(JwtAuthenticationGuard)
-    @Post('product-owner-create-staff')
-    async productOwnerCreateStaff(@Body() userData: CreateUserDto, @Req() request: RequestWithUser, @Res() response: Response) {
-        const { user } = request;
-        const result = await this.authenticationService.productOwnerCreateStaff(userData, user)
+        const result = await this.authenticationService.participantCreateStaff(userData, user)
         return response.status(HttpStatus.ACCEPTED).json(result);
     }
 
@@ -262,7 +247,7 @@ export class AuthenticationController {
 
     @HttpCode(201)
     @UseGuards(JwtAuthenticationGuard, IsProductOwnerGuard)
-    @Post("kyc-participant")
+    @Post("kyc-business")
     async kycBusiness(@Body() userData: BusinessKycDto, @Req() request: RequestWithUser, @Res() response: Response) {
         const userId = request.user['data']['user']['id'];
         const user = await this.authenticationService.kycBusiness(userData, userId)

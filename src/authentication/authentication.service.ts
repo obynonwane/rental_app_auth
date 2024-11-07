@@ -7,7 +7,7 @@ import { TokenPayload } from './interfaces/token-payload.interface';
 import CreateUserRoleDto from 'src/_dtos/create-role.dto';
 import User from '../user/user.entity';
 import LoginUserDto from '../_dtos/login-user.dto';
-import AssignUserPermissionDto from '../_dtos/assign-permission.dto';
+
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import RenterKycDto from '../_dtos/renter-kyc.dto';
 import { IdentityTypesService } from '../identity-types/identity-types.service';
@@ -50,8 +50,8 @@ export class AuthenticationService {
     async signupAdmin(userData: CreateUserDto) {
         return await this.userService.signupAdmin(userData)
     }
-    async productOwnerCreateStaff(userData: CreateUserDto, user: any) {
-        return await this.userService.productOwnerCreateStaff(userData, user)
+    async participantCreateStaff(userData: CreateUserDto, user: any) {
+        return await this.userService.participantCreateStaff(userData, user)
     }
 
     public async verifyEmail(token: string): Promise<{ message: string, error: boolean, status_code: number }> {
@@ -72,10 +72,6 @@ export class AuthenticationService {
 
     public async productOwnerPermission(user: User) {
         return await this.userService.productOwnerPermission(user);
-    }
-
-    public async productOwnerAssignPermission(user: any, payload: AssignUserPermissionDto) {
-        return await this.userService.productOwnerAssignPermission(user, payload);
     }
 
     public async getCountries() {
@@ -109,18 +105,11 @@ export class AuthenticationService {
     }
 
     public async retriveUserTypes() {
-
         const userTypes = {}
-
-
         UserTypeArray.map(x => {
             if (x == "participant") { userTypes[x] = x.replace(/_/g, " ") }
         }
         );
-
-
-
         return userTypes
-
     }
 }
