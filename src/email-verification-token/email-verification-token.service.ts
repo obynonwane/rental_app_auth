@@ -43,6 +43,14 @@ export class EmailVerificationTokenService {
                 return {
                     "message": `Token not found for email: ${token}`,
                     error: false,
+                    status_code: 401,
+                }
+            }
+
+            if (tokenEntity?.expired) {
+                return {
+                    "message": `Token expired`,
+                    error: false,
                     status_code: 400,
                 }
             }
@@ -52,6 +60,10 @@ export class EmailVerificationTokenService {
 
             //save updated entity back to database
             await this.userRepository.save(user);
+
+            //update emailVerificationTokenRepository
+            tokenEntity.expired = true
+            await this.emailVerificationTokenRepository.save(tokenEntity)
 
             return {
                 "message": "account verified succesfully",
