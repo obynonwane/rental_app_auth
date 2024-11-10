@@ -7,8 +7,8 @@ class ParticipantStaff {
     public id: string;
 
     @ManyToOne(() => User)
-    @JoinColumn({ name: 'participant_id' })
-    public productOwner: User;
+    @JoinColumn({ name: 'user_id' })
+    public user: User;
 
     @ManyToOne(() => User)
     @JoinColumn({ name: 'staff_id' })

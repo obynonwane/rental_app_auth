@@ -15,7 +15,7 @@ import Role from '../role/role.entity';
 
 import { JsonResponse } from './respose-interface';
 import { UserType, UserTypeArray } from "../_enums/user-type.enum"
-import ProductOwnerStaff from "../participant-staff/participant-staff.entity"
+import ParticipantStaff from "../participant-staff/participant-staff.entity"
 
 import Country from '../country/country.entity';
 import State from '../state/state.entity';
@@ -36,8 +36,8 @@ export class UserService {
         @InjectRepository(Role)
         private roleRepository: Repository<Role>,
 
-        @InjectRepository(ProductOwnerStaff)
-        private productOwnerStaffRepository: Repository<ProductOwnerStaff>,
+        @InjectRepository(ParticipantStaff)
+        private productOwnerStaffRepository: Repository<ParticipantStaff>,
 
         @InjectRepository(Country)
         private countryRepository: Repository<Country>,
@@ -340,7 +340,7 @@ export class UserService {
             const staffUser = await transactionalEntityManager.save(User, newUser);
 
             // Assign the 'participant_staff' role to the new user
-            const productOwnerStaffRole = await transactionalEntityManager.findOne(Role, { where: { name: UserType.PARTICIPANT_STAFF } });
+            const productOwnerStaffRole = await transactionalEntityManager.findOne(Role, { where: { name: userData.role } });
             if (!productOwnerStaffRole) {
                 throw new CustomHttpException(
                     'Role "participant_staff" not found',
@@ -364,22 +364,22 @@ export class UserService {
 
 
             // Assuming the current user is the product owner
-            const productOwnerUser = await transactionalEntityManager.findOne(User, { where: { id: _user.data.id } });
+            const theAccountOwner = await transactionalEntityManager.findOne(User, { where: { id: _user.data.id } });
 
-            if (!productOwnerUser) {
+            if (!theAccountOwner) {
                 throw new CustomHttpException(
-                    'Product Owner user not found',
+                    'user creating staff not found',
                     HttpStatus.NOT_FOUND,
                     { statusCode: HttpStatus.NOT_FOUND, error: true }
                 );
             }
 
             // Create the relationship between the product owner and the new staff
-            const productOwnerStaff = new ProductOwnerStaff();
-            productOwnerStaff.productOwner = productOwnerUser;
-            productOwnerStaff.staff = staffUser;
+            const accountOwner = new ParticipantStaff();
+            accountOwner.user = theAccountOwner;
+            accountOwner.staff = staffUser;
 
-            await transactionalEntityManager.save(ProductOwnerStaff, productOwnerStaff);
+            await transactionalEntityManager.save(ParticipantStaff, accountOwner);
 
             const data = {
                 email: staffUser.email,
@@ -391,7 +391,6 @@ export class UserService {
             // Log the creation
             this.rabbitClient.emit('log.INFO', { name: 'log', data: data });
         });
-
         return {
             error: false,
             statusCode: HttpStatus.CREATED,
