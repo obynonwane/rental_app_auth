@@ -160,7 +160,7 @@ export class AuthenticationController {
     @HttpCode(200)
     @UseGuards(JwtAuthenticationGuard, IsParticiapntGuard)
     @UseInterceptors(FileInterceptor('file'))
-    @Post('renter-kyc')
+    @Post('kyc-renter')
     async kycRenter(
         @UploadedFile() file: Express.Multer.File,
         @Body() body: any,
