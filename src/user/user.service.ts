@@ -20,6 +20,7 @@ import ParticipantStaff from "../participant-staff/participant-staff.entity"
 import Country from '../country/country.entity';
 import State from '../state/state.entity';
 import Lga from '../lga/lga.entity';
+import { CreateStaffDto } from 'src/_dtos/create-staff.dto';
 
 
 const configService = new ConfigService();
@@ -288,7 +289,7 @@ export class UserService {
 
 
 
-    public async participantCreateStaff(userData: CreateUserDto, _user: any) {
+    public async participantCreateStaff(userData: CreateStaffDto, _user: any) {
         // Extract the user roles
         const userRoles = _user.data.roles;
 
@@ -339,6 +340,7 @@ export class UserService {
             // save the new participant_staff user
             const staffUser = await transactionalEntityManager.save(User, newUser);
 
+
             // Assign the 'participant_staff' role to the new user
             const productOwnerStaffRole = await transactionalEntityManager.findOne(Role, { where: { name: userData.role } });
             if (!productOwnerStaffRole) {
@@ -348,6 +350,8 @@ export class UserService {
                     { statusCode: HttpStatus.NOT_FOUND, error: true }
                 );
             }
+
+
 
             // Assign the 'participant_staff' role to the new user
             if (!staffUser.roles) {

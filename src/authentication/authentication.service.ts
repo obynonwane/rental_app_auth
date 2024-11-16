@@ -15,6 +15,7 @@ import { RenterKycService } from '../renter-kyc/renter-kyc.service';
 import BusinessKycDto from '../_dtos/business-kyc.dto';
 import { BusinessKycService } from '../business-kyc/business-kyc.service';
 import { UserTypeArray } from '../_enums/user-type.enum';
+import { CreateStaffDto } from '../_dtos/create-staff.dto';
 
 @Injectable()
 export class AuthenticationService {
@@ -50,7 +51,7 @@ export class AuthenticationService {
     async signupAdmin(userData: CreateUserDto) {
         return await this.userService.signupAdmin(userData)
     }
-    async participantCreateStaff(userData: CreateUserDto, user: any) {
+    async participantCreateStaff(userData: CreateStaffDto, user: any) {
         return await this.userService.participantCreateStaff(userData, user)
     }
 

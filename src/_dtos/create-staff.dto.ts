@@ -1,6 +1,6 @@
 import { UserType } from "../_enums/user-type.enum";
 
-export class CreateUserDto {
+export class CreateStaffDto {
     first_name: string;
     last_name: string;
     phone: string;
@@ -12,4 +12,4 @@ export class CreateUserDto {
 
 
 
-export default CreateUserDto;
+export default CreateStaffDto;
