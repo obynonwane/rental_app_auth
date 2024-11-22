@@ -14,7 +14,7 @@ export class JwtExceptionFilter implements ExceptionFilter {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
 
-        let customMessage = 'User not found or unauthorized';
+        let customMessage = 'User unauthorized';
         if (exception.message.includes('expired')) {
             customMessage = 'Token has expired';
         } else if (exception.message.includes('Invalid token')) {
