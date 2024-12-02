@@ -4,8 +4,12 @@ import { DataSource } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { config } from 'dotenv';
 
+// Load the appropriate .env file
+const envFile = process.env.NODE_ENV === 'test' ? '.env.test' : '.env';
+config({ path: envFile });
 
-config();
+
+
 const configService = new ConfigService();
 export default new DataSource({
     type: 'postgres',

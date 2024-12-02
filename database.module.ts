@@ -3,8 +3,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { entities } from "./entities"
 
+
 @Module({
     imports: [
+
         TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
             inject: [ConfigService],
@@ -17,8 +19,11 @@ import { entities } from "./entities"
                 database: configService.get('DATABASE_NAME'),
                 entities: entities,
                 autoLoadEntities: true,
+                synchronize: process.env.NODE_ENV !== 'production', // Disable sync in production
             })
         }),
     ],
 })
-export class DatabaseModule { }
+export class DatabaseModule {
+
+}
