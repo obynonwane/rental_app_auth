@@ -123,7 +123,7 @@ export class UserService {
 
             return {
                 error: false,
-                statusCode: HttpStatus.ACCEPTED,
+                status_code: HttpStatus.ACCEPTED,
                 message: "user account created",
             }
 

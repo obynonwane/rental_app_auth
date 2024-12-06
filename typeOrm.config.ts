@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { config } from 'dotenv';
 
 // Load the appropriate .env file
-const envFile = process.env.NODE_ENV === 'test' ? '.env.test' : '.env';
+const envFile = process.env.DEV_ENV === 'test' ? '.env.test' : '.env';
 config({ path: envFile });
 
 
