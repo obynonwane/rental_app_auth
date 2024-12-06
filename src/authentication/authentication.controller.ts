@@ -45,7 +45,7 @@ export class AuthenticationController {
     @Post('login')
     async logIn(@Body() userData: LoginUserDto, @Res() response: Response) {
 
-        console.log(process.env.NODE_ENV, "THE ENVIRONMENT")
+        console.log(process.env.DEV_ENV, "THE ENVIRONMENT")
         const token: string = await this.authenticationService.getJwtToken(userData);
         return response.status(HttpStatus.ACCEPTED).json(
             {
