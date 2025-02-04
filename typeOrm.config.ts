@@ -3,12 +3,10 @@ import { DataSource } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { config } from 'dotenv';
 
-// Load the appropriate .env file
-// const envFile = process.env.DEV_ENV === 'test' ? '.env.test' : '.env';
-// config({ path: envFile });
+// Load .env only in non-Kubernetes environments
 if (!process.env.KUBERNETES_SERVICE_HOST) {
-  const envFile = process.env.DEV_ENV === 'test' ? '.env.test' : '.env';
-  config({ path: envFile });
+  console.log(`Loading environment variables from .env`);
+  config(); // No need to specify a path, it will default to ".env"
 }
 
 const configService = new ConfigService();
