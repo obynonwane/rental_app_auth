@@ -34,7 +34,7 @@ import { BusinessKycModule } from './business-kyc/business-kyc.module';
     PrometheusModule.register(),
     HttpModule,
     ConfigModule.forRoot({
-      // envFilePath: process.env.DEV_ENV === 'test' ? '.env.test' : '.env', // Dynamically select env file
+      // envFilePath: process.env.DEV_ENV === 'test' ? '.env.test' : '.env', 
 
       validationSchema: Joi.object({
         DATABASE_HOST: Joi.string().required(),
