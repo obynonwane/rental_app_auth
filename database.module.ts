@@ -17,7 +17,7 @@ import { entities } from './entities';
         database: configService.get('DATABASE_NAME'),
         entities: entities,
         autoLoadEntities: true,
-        synchronize: process.env.NODE_ENV !== 'production', // Disable sync in production
+        synchronize: false,
       }),
     }),
   ],
