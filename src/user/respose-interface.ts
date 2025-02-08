@@ -1,12 +1,12 @@
-import Role from "../role/role.entity";
+import Role from '../role/role.entity';
 
 export interface Data {
-    role: Role;
+  role: Role;
 }
 
 export interface JsonResponse {
-    error: boolean;
-    message: string;
-    statusCode: number;
-    data: any;
+  error: boolean;
+  message: string;
+  statusCode: number;
+  data: any;
 }

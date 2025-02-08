@@ -27,6 +27,8 @@ import IdentityType from '../identity-types/identity-types.entity';
 import { RenterKyc } from '../renter-kyc/renter-kyc.entity';
 import { BusinessKycService } from '../business-kyc/business-kyc.service';
 import { BusinessKyc } from '../business-kyc/business-kyc.entity';
+import { ResetPasswordTokenService } from '../reset-password-token/reset-password-token.service';
+import ResetPasswordToken from '../reset-password-token/reset-password-token.entity';
 @Global()
 @Module({
   imports: [
@@ -67,7 +69,8 @@ import { BusinessKyc } from '../business-kyc/business-kyc.entity';
       Lga,
       IdentityType,
       RenterKyc,
-      BusinessKyc
+      BusinessKyc,
+      ResetPasswordToken
     ])
   ],
   providers: [
@@ -79,7 +82,8 @@ import { BusinessKyc } from '../business-kyc/business-kyc.entity';
     CloudinaryService,
     RenterKycService,
     IdentityTypesService,
-    BusinessKycService
+    BusinessKycService,
+    ResetPasswordTokenService
   ],
   controllers: [AuthenticationController],
   exports: [JwtStrategy, PassportModule],

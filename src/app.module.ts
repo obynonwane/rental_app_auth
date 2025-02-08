@@ -26,6 +26,7 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { RenterKycModule } from './renter-kyc/renter-kyc.module';
 import { IdentityTypesModule } from './identity-types/identity-types.module';
 import { BusinessKycModule } from './business-kyc/business-kyc.module';
+import { ResetPasswordTokenModule } from './reset-password-token/reset-password-token.module';
 
 
 
@@ -64,6 +65,7 @@ import { BusinessKycModule } from './business-kyc/business-kyc.module';
     RenterKycModule,
     IdentityTypesModule,
     BusinessKycModule,
+    ResetPasswordTokenModule,
   ],
   controllers: [],
   providers: [],

@@ -11,6 +11,8 @@ import ParticipantStaff from '../participant-staff/participant-staff.entity';
 import Country from '../country/country.entity';
 import State from '../state/state.entity';
 import Lga from '../lga/lga.entity';
+import { ResetPasswordTokenService } from '../reset-password-token/reset-password-token.service';
+import ResetPasswordToken from '../reset-password-token/reset-password-token.entity';
 
 
 
@@ -30,7 +32,16 @@ import Lga from '../lga/lga.entity';
         },
       },
     ]),
-    TypeOrmModule.forFeature([User, EmailVerificationToken, Role, ParticipantStaff, Country, State, Lga])],
-  providers: [UserService, EmailVerificationTokenService, Utility]
+    TypeOrmModule.forFeature([
+      User,
+      EmailVerificationToken,
+      Role,
+      ParticipantStaff,
+      Country,
+      State,
+      Lga,
+      ResetPasswordToken
+    ])],
+  providers: [UserService, EmailVerificationTokenService, Utility, ResetPasswordTokenService]
 })
 export class UserModule { }
