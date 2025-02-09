@@ -17,6 +17,7 @@ import { BusinessKycService } from '../business-kyc/business-kyc.service';
 import { UserTypeArray } from '../_enums/user-type.enum';
 import { CreateStaffDto } from '../_dtos/create-staff.dto';
 import ResetPasswordEmailDto from '../_dtos/reset-password-email.dto';
+import ChangePasswordDto from '../_dtos/change-password.dto';
 
 @Injectable()
 export class AuthenticationService {
@@ -28,7 +29,7 @@ export class AuthenticationService {
     private identityTypesService: IdentityTypesService,
     private renterKycService: RenterKycService,
     private businessKycService: BusinessKycService,
-  ) {}
+  ) { }
 
   public async getJwtToken(_user: LoginUserDto) {
     const user = await this.userService.getByEmail(_user.email, _user.password);
@@ -113,5 +114,9 @@ export class AuthenticationService {
 
   public async sendResetPasswordEmail(userdata: ResetPasswordEmailDto) {
     return await this.userService.sendResetPasswordEmail(userdata.email);
+  }
+
+  public async changePassword(userdata: ChangePasswordDto) {
+    return await this.userService.changePassword(userdata);
   }
 }

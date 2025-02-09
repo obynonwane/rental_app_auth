@@ -26,4 +26,24 @@ export class ResetPasswordTokenService {
             throw new InternalServerErrorException(error)
         }
     }
+
+    public async getToken(token: string) {
+        try {
+            return await this.resetPasswordTokenRepository.findOne({ where: { token: token } });
+
+        } catch (error) {
+            throw new InternalServerErrorException(error)
+        }
+    }
+
+    public async deactivateToken(token: string) {
+        try {
+            const data = await this.resetPasswordTokenRepository.findOne({ where: { token: token } });
+            data.expired = true
+            await this.resetPasswordTokenRepository.save(data)
+
+        } catch (error) {
+            throw new InternalServerErrorException(error)
+        }
+    }
 }

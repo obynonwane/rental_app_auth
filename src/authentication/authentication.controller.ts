@@ -35,6 +35,7 @@ import { IsParticiapntGuard } from './guards/is-renter.guard';
 import { BusinessKycDto } from '../_dtos/business-kyc.dto';
 import { IsProductOwnerGuard } from './guards/is-product-owner.guard';
 import { ResetPasswordEmailDto } from '../_dtos/reset-password-email.dto';
+import { ChangePasswordDto } from '../_dtos/change-password.dto';
 
 //
 @Controller('authentication')
@@ -306,7 +307,7 @@ export class AuthenticationController {
   }
 
 
-  @Post('/reset-password-email')
+  @Post('reset-password-email')
   async sendResetPasswordEmail(
     @Body() userData: ResetPasswordEmailDto,
     @Res() response: Response,
@@ -315,7 +316,24 @@ export class AuthenticationController {
     const result = await this.authenticationService.sendResetPasswordEmail(
       userData,
     );
-    console.log("THE CODE", result.statusCode)
+
+    return response.status(result.statusCode).json({
+      error: result.error,
+      statusCode: result.statusCode,
+      message: result.message,
+      data: result.data
+    });
+  }
+
+  @Post('change-password')
+  async changePassword(
+    @Body() userData: ChangePasswordDto,
+    @Res() response: Response,
+  ) {
+
+    const result = await this.authenticationService.changePassword(
+      userData,
+    );
     return response.status(result.statusCode).json({
       error: result.error,
       statusCode: result.statusCode,

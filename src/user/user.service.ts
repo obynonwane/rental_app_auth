@@ -21,6 +21,7 @@ import State from '../state/state.entity';
 import Lga from '../lga/lga.entity';
 import { CreateStaffDto } from '../_dtos/create-staff.dto';
 import { ResetPasswordTokenService } from '../reset-password-token/reset-password-token.service';
+import ChangePasswordDto from '../_dtos/change-password.dto';
 
 @Injectable()
 export class UserService {
@@ -551,6 +552,68 @@ export class UserService {
     } catch (error) {
       throw new CustomHttpException(
         'error sending reset password email',
+        HttpStatus.BAD_REQUEST,
+        { statusCode: HttpStatus.BAD_REQUEST, error: true },
+      );
+    }
+  }
+
+
+  public async changePassword(userdata: ChangePasswordDto) {
+    try {
+      const token = await this.resetPasswordTokenService.getToken(userdata.token)
+
+      if (!token) {
+        const response: JsonResponse = {
+          error: true,
+          message: 'token supplied cannot be found',
+          statusCode: HttpStatus.BAD_REQUEST,
+          data: null
+        };
+        return response;
+      }
+
+      if (token.expired == true) {
+        const response: JsonResponse = {
+          error: true,
+          message: 'token already expired',
+          statusCode: HttpStatus.BAD_REQUEST,
+          data: null
+        };
+        return response;
+      }
+
+      // update the user
+      let user = await this.userRepository.findOne({ where: { email: token.email } })
+
+      if (!user) {
+        const response: JsonResponse = {
+          error: true,
+          message: 'user not found',
+          statusCode: HttpStatus.BAD_REQUEST,
+          data: null
+        };
+        return response;
+      }
+
+      user.password = await this.createPasswordHash(userdata.password)
+      await this.userRepository.save(user)
+
+      // update the token as expired 
+      await this.resetPasswordTokenService.deactivateToken(userdata.token)
+
+
+      const response: JsonResponse = {
+        error: false,
+        message: 'user password changed succesfully',
+        statusCode: HttpStatus.ACCEPTED,
+        data: null
+      };
+      return response;
+
+    } catch (error) {
+      throw new CustomHttpException(
+        'error changing user password',
         HttpStatus.BAD_REQUEST,
         { statusCode: HttpStatus.BAD_REQUEST, error: true },
       );
