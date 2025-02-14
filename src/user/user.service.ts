@@ -539,6 +539,8 @@ export class UserService {
           `${process.env.FORGOT_PASSWORD_URL}` + '?token=' + `${token.token}`,
       };
 
+      console.log("DATA", data)
+
       //send email verification mail - rabbitmq
       this.rabbitClient.emit('log.INFO', { name: 'reset-password-email', data: data });
 
