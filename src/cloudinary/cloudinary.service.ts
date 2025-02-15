@@ -3,7 +3,7 @@ import { v2 as cloudinary, UploadApiResponse, UploadApiErrorResponse } from 'clo
 import RenterKycDto from '../_dtos/renter-kyc.dto';
 import { promises as fs } from 'fs';
 import * as path from 'path';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { RenterKyc } from '../renter-kyc/renter-kyc.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import User from '../user/user.entity';
@@ -53,22 +53,41 @@ export class CloudinaryService {
                         }
 
 
-                        // create the kyc
-                        const userExist = await this.renterKycRepository.findOne({ where: { user: { id: detail.userId } } })
-                        if (!userExist) {
-                            const kyc = this.renterKycRepository.create({
-                                address: detail.address,
-                                uploaded_image: result.secure_url,
-                                identity_number: detail.idNumber,
-                                identityType: { id: detail.idType },
-                                user: { id: detail.userId },
-                                country: { id: detail.addressCountry },
-                                state: { id: detail.addressState },
-                                lga: { id: detail.addressLga },
-                            });
+                        const entityManager = this.renterKycRepository.manager;
 
-                            await this.renterKycRepository.save(kyc)
-                        }
+                        await entityManager.transaction(async (transactionalEntityManager: EntityManager) => {
+
+                            // create the kyc
+                            const userExist = await transactionalEntityManager.findOne(RenterKyc, {
+                                where: { user: { id: detail.userId } },
+                            });
+                            if (!userExist) {
+                                const kyc = this.renterKycRepository.create({
+                                    address: detail.address,
+                                    uploaded_image: result.secure_url,
+                                    identity_number: detail.idNumber,
+                                    identityType: { id: detail.idType },
+                                    user: { id: detail.userId },
+                                    country: { id: detail.addressCountry },
+                                    state: { id: detail.addressState },
+                                    lga: { id: detail.addressLga },
+                                });
+
+                                // save the kyc details
+                                await transactionalEntityManager.save(RenterKyc, kyc);
+
+                                //update the user type
+                                await transactionalEntityManager.query(
+                                    `UPDATE users 
+                                     SET user_types = array_append(user_types, $1), 
+                                         kycs = array_append(kycs, $2) 
+                                     WHERE id = $3`,
+                                    ["renter", "renter", detail.userId]
+                                );
+                            }
+
+                        })
+
                         // Attempt to delete the file after successful upload
                         try {
                             await fs.unlink(storagePath); // Delete the local file
