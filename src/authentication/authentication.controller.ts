@@ -313,7 +313,6 @@ export class AuthenticationController {
     @Res() response: Response,
   ) {
 
-    console.log("TESTING RESET PASSWORD EMAIL - CONTROLLER")
     const result = await this.authenticationService.sendResetPasswordEmail(
       userData,
     );
