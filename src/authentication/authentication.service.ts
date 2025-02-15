@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import CreateUserDto from 'src/_dtos/create-user.dto';
 import { JwtService } from '@nestjs/jwt';
@@ -18,6 +18,7 @@ import { UserTypeArray } from '../_enums/user-type.enum';
 import { CreateStaffDto } from '../_dtos/create-staff.dto';
 import ResetPasswordEmailDto from '../_dtos/reset-password-email.dto';
 import ChangePasswordDto from '../_dtos/change-password.dto';
+import RequestPasswordVerificationEmailDto from '../_dtos/request-password-verification-email.dto';
 
 @Injectable()
 export class AuthenticationService {
@@ -34,18 +35,35 @@ export class AuthenticationService {
   public async getJwtToken(_user: LoginUserDto) {
     const user = await this.userService.getByEmail(_user.email, _user.password);
 
+    if (!user.data.verified) {
+      return {
+        error: true,
+        statusCode: HttpStatus.BAD_REQUEST,
+        message: 'email not verified, please verify your email',
+        data: {}
+      }
+    }
     const userId = user.data.id;
-    console.log(userId);
+
     // return user
     const payload: TokenPayload = { userId };
-    console.log(payload);
     const token = this.jwtService.sign(payload);
-    console.log(token);
-    return token;
+    return {
+      error: false,
+      statusCode: 200,
+      message: 'logged-in successfully',
+      data: {
+        access_token: token,
+      },
+    }
   }
 
   async createUser(userData: CreateUserDto) {
     return await this.userService.create(userData);
+  }
+
+  async requestVerificationEmail(userData: RequestPasswordVerificationEmailDto) {
+    return await this.userService.requestVerificationEmail(userData);
   }
   async signupAdmin(userData: CreateUserDto) {
     return await this.userService.signupAdmin(userData);
