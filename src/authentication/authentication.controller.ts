@@ -270,7 +270,7 @@ export class AuthenticationController {
   ) {
     const userId = request.user['data']['user']['id'];
     const user = await this.authenticationService.kycBusiness(userData, userId);
-    return response.status(HttpStatus.ACCEPTED).json(user);
+    return response.status(user.statusCode).json(user);
   }
 
   @HttpCode(200)

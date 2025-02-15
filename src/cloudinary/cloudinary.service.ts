@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { v2 as cloudinary, UploadApiResponse, UploadApiErrorResponse } from 'cloudinary';
 import RenterKycDto from '../_dtos/renter-kyc.dto';
 import { promises as fs } from 'fs';
@@ -7,6 +7,9 @@ import { EntityManager, Repository } from 'typeorm';
 import { RenterKyc } from '../renter-kyc/renter-kyc.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import User from '../user/user.entity';
+import Country from '../country/country.entity';
+import State from '../state/state.entity';
+import Lga from '../lga/lga.entity';
 
 @Injectable()
 export class CloudinaryService {
@@ -17,6 +20,15 @@ export class CloudinaryService {
 
         @InjectRepository(User)
         private userRepository: Repository<User>,
+
+        @InjectRepository(Country)
+        private countryRepository: Repository<Country>,
+
+        @InjectRepository(State)
+        private stateRepository: Repository<State>,
+
+        @InjectRepository(Lga)
+        private lgaRepository: Repository<Lga>,
     ) {
         // Initialize Cloudinary with your credentials
         cloudinary.config({
@@ -27,8 +39,47 @@ export class CloudinaryService {
     }
 
 
-    async uploadRenterKyc(detail: RenterKycDto): Promise<UploadApiResponse | UploadApiErrorResponse> {
+    async uploadRenterKyc(detail: RenterKycDto): Promise<UploadApiResponse | UploadApiErrorResponse | { error: boolean, statusCode: number, message: string, data: any }> {
         try {
+
+
+            // check  country 
+            const country = await this.countryRepository.findOne({ where: { id: detail.addressCountry } })
+            if (!country) {
+                return {
+                    error: true,
+                    statusCode: HttpStatus.BAD_REQUEST,
+                    message: 'country selected do not exist',
+                    data: {}
+                };
+
+            }
+
+            // check  state 
+            const state = await this.stateRepository.findOne({ where: { id: detail.addressState, country: { id: country.id } } })
+            if (!state) {
+                return {
+                    error: true,
+                    statusCode: HttpStatus.BAD_REQUEST,
+                    message: 'state selected do not belong to the country',
+                    data: {},
+                };
+
+            }
+
+            // check  lga
+            const lga = await this.lgaRepository.findOne({ where: { id: detail.addressLga, state: { id: state.id } } })
+            if (!lga) {
+                return {
+                    error: true,
+                    statusCode: HttpStatus.BAD_REQUEST,
+                    message: 'city (lga) selected do not belong to the state',
+                    data: {},
+                };
+
+            }
+
+
             return new Promise((resolve, reject) => {
                 const storagePath = detail.targetPath // Ensure the correct path
 
