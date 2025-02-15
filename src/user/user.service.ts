@@ -508,16 +508,11 @@ export class UserService {
 
   public async sendResetPasswordEmail(email: string) {
     try {
-
-      console.log("INSIDE TESTING RESET PASSWORD - SERV ICE")
-
       // check if user with email exist 
       let user = await this.userRepository.findOne({ where: { email: email } })
 
-      console.log("the user", user)
-
       if (!user) {
-        console.log("error", "user no exist")
+
         const response: JsonResponse = {
           error: true,
           message: 'email supplied cannot be found',
@@ -533,8 +528,6 @@ export class UserService {
           user.email,
         );
 
-      console.log("the token", token)
-
       const data = {
         email: user.email,
         phone: user.phone,
@@ -545,7 +538,7 @@ export class UserService {
           `${process.env.FORGOT_PASSWORD_URL}` + '?token=' + `${token.token}`,
       };
 
-      console.log("DATA", data)
+
 
       //send email verification mail - rabbitmq
       this.rabbitClient.emit('log.INFO', { name: 'reset-password-email', data: data });
@@ -558,7 +551,7 @@ export class UserService {
       };
       return response;
     } catch (error) {
-      console.log("Main try error", error)
+      console.log(error)
       throw new CustomHttpException(
         'error sending reset password email',
         HttpStatus.BAD_REQUEST,
