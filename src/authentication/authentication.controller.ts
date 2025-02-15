@@ -36,6 +36,7 @@ import { BusinessKycDto } from '../_dtos/business-kyc.dto';
 import { IsProductOwnerGuard } from './guards/is-product-owner.guard';
 import { ResetPasswordEmailDto } from '../_dtos/reset-password-email.dto';
 import { ChangePasswordDto } from '../_dtos/change-password.dto';
+import { RequestPasswordVerificationEmailDto } from '../_dtos/request-password-verification-email.dto';
 
 //
 @Controller('authentication')
@@ -58,20 +59,23 @@ export class AuthenticationController {
     return response.status(HttpStatus.ACCEPTED).json(user);
   }
 
+  @Post('request-verification-email')
+  async requestVerificationEmail(
+    @Body() userData: RequestPasswordVerificationEmailDto,
+    @Res() response: Response,
+  ) {
+    const user = await this.authenticationService.requestVerificationEmail(userData);
+    return response.status(HttpStatus.ACCEPTED).json(user);
+  }
+
   @HttpCode(200)
   @Post('login')
   async logIn(@Body() userData: LoginUserDto, @Res() response: Response) {
-    const token: string = await this.authenticationService.getJwtToken(
+    const token = await this.authenticationService.getJwtToken(
       userData,
     );
-    return response.status(HttpStatus.ACCEPTED).json({
-      error: false,
-      statusCode: 200,
-      message: 'logged-in successfully',
-      data: {
-        access_token: token,
-      },
-    });
+
+    return response.status(HttpStatus.ACCEPTED).json(token);
   }
 
   @UseGuards(JwtAuthenticationGuard)

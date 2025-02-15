@@ -35,6 +35,21 @@ export class EmailVerificationTokenService {
         }
     }
 
+
+    public async updateCreateEmailverificationToken(email: string) {
+        try {
+
+            const token = await this.emailVerificationTokenRepository.findOne({ where: { email: email } })
+            token.token = await this.utilities.generateRandomString()
+
+            await this.emailVerificationTokenRepository.save(token)
+            return await this.emailVerificationTokenRepository.save(token);
+
+        } catch (error) {
+            throw new InternalServerErrorException(error)
+        }
+    }
+
     public async verifyEmail(token: string): Promise<{ message: string, error: boolean, status_code: number }> {
         try {
             // Find the record by email

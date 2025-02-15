@@ -22,6 +22,7 @@ import Lga from '../lga/lga.entity';
 import { CreateStaffDto } from '../_dtos/create-staff.dto';
 import { ResetPasswordTokenService } from '../reset-password-token/reset-password-token.service';
 import ChangePasswordDto from '../_dtos/change-password.dto';
+import RequestPasswordVerificationEmailDto from '../_dtos/request-password-verification-email.dto';
 
 @Injectable()
 export class UserService {
@@ -159,6 +160,57 @@ export class UserService {
       );
     }
   }
+
+  public async requestVerificationEmail(userData: RequestPasswordVerificationEmailDto) {
+    try {
+      const user = await this.userRepository.findOne({
+        where: { email: userData.email }
+      });
+
+      if (!user) {
+        return {
+          error: true,
+          status_code: HttpStatus.BAD_REQUEST,
+          message: 'email do not exist, please signup to lendora.ng',
+        };
+      }
+
+      const token =
+        await this.emailVerificationTokenService.updateCreateEmailverificationToken(
+          userData.email,
+        );
+
+      const data = {
+        email: user.email,
+        phone: user.phone,
+        email_verification_token: token.token,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        verified: user.verified,
+        verification_link:
+          `${process.env.ROOT_URL}` + '?token=' + `${token.token}`,
+      };
+
+      //send email verification mail - rabbitmq
+      this.rabbitClient.emit('log.INFO', { name: 'auth', data: data });
+
+      //make a request to logger service with the payload to submit logging - rabbitmQ
+      this.rabbitClient.emit('log.INFO', { name: 'log', data: data });
+
+      return {
+        error: false,
+        status_code: HttpStatus.ACCEPTED,
+        message: 'account verification email sent',
+      };
+    } catch (error) {
+      throw new CustomHttpException(
+        'error sending verification email',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        { statusCode: HttpStatus.INTERNAL_SERVER_ERROR, error: true },
+      );
+    }
+  }
+
   public async signupAdmin(userData: CreateUserDto) {
     try {
       const newUser = this.userRepository.create({
