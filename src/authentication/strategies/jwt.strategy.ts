@@ -7,6 +7,9 @@ import User from '../../user/user.entity';
 import { JsonResponse, JwtPayload } from '../interfaces/jwt-payload.interface';
 import { UserService } from '../../user/user.service';
 import { ConfigService } from '@nestjs/config';
+import { BusinessKyc } from '../../business-kyc/business-kyc.entity';
+import { RenterKyc } from '../../renter-kyc/renter-kyc.entity';
+import { KycType } from 'src/_enums/kyc-types.enum';
 
 
 @Injectable()
@@ -15,6 +18,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     private readonly configService: ConfigService,
     private readonly userService: UserService,
     @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(BusinessKyc) private businessKycRepository: Repository<BusinessKyc>,
+    @InjectRepository(RenterKyc) private renterKycRepository: Repository<RenterKyc>,
 
   ) {
     super({
@@ -39,6 +44,19 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     // Extract roles
     const roles: string[] = user.roles.map(role => role.name);
 
+
+    let business_kyc: BusinessKyc
+    let renter_kyc: RenterKyc
+
+    if (user.kycs.includes(KycType.BUSINESS)) {
+      business_kyc = await this.businessKycRepository.findOne({ where: { user: { id: user.id } } })
+    }
+
+    if (user.kycs.includes(KycType.RENTER)) {
+      renter_kyc = await this.renterKycRepository.findOne({ where: { user: { id: user.id } } })
+    }
+
+
     user.roles = undefined;
     user.password = undefined;
 
@@ -51,6 +69,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       data: {
         user,         // Include the original user object
         roles,        // Include the extracted roles array
+        kyc_detail: {
+          renter_kyc,
+          business_kyc
+        }
       }
     };
 
