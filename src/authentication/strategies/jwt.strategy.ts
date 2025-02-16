@@ -48,11 +48,16 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     let business_kyc: BusinessKyc
     let renter_kyc: RenterKyc
 
-    if (user.kycs.includes(KycType.BUSINESS)) {
+    // if (user.kycs.includes(KycType.BUSINESS)) {
+    //   business_kyc = await this.businessKycRepository.findOne({ where: { user: { id: user.id } } })
+    // }
+
+    if (roles && Array.isArray(roles) && roles.includes(KycType.BUSINESS)) {
       business_kyc = await this.businessKycRepository.findOne({ where: { user: { id: user.id } } })
     }
 
-    if (user.kycs.includes(KycType.RENTER)) {
+
+    if (roles && Array.isArray(roles) && roles.includes(KycType.RENTER)) {
       renter_kyc = await this.renterKycRepository.findOne({ where: { user: { id: user.id } } })
     }
 
