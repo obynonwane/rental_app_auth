@@ -43,6 +43,12 @@ class User {
   })
   public roles: Role[];
 
+  @Column("varchar", { array: true, nullable: true })
+  public user_types: string[];
+
+  @Column("varchar", { array: true, nullable: true })
+  public kycs: string[];
+
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
   public created_at: Date;
 
