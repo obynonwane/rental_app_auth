@@ -56,16 +56,29 @@ export class EmailVerificationTokenService {
             const tokenEntity = await this.emailVerificationTokenRepository.findOne({ where: { token: token } });
             if (!tokenEntity) {
                 return {
-                    "message": `Token not found for email: ${token}`,
-                    error: false,
+                    "message": `Token not found for email`,
+                    error: true,
                     status_code: 401,
+                }
+            }
+
+            // check if token created at is above 1 hour
+            if (tokenEntity?.created_at) {
+                const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000); // 1 hour ago
+
+                if (new Date(tokenEntity.created_at) < oneHourAgo) {
+                    return {
+                        message: `email verification token expired`,
+                        error: true,
+                        status_code: 400,
+                    };
                 }
             }
 
             if (tokenEntity?.expired) {
                 return {
-                    "message": `email verification token expired`,
-                    error: false,
+                    "message": `email verification token already used`,
+                    error: true,
                     status_code: 400,
                 }
             }
@@ -82,7 +95,7 @@ export class EmailVerificationTokenService {
 
             return {
                 "message": "account verified succesfully",
-                error: true,
+                error: false,
                 status_code: 200,
             }
         } catch (error) {

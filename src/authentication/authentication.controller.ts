@@ -134,7 +134,7 @@ export class AuthenticationController {
   ) {
     const data = await this.authenticationService.verifyEmail(token);
     const status =
-      data.error == true ? HttpStatus.ACCEPTED : HttpStatus.BAD_REQUEST;
+      data.error == true ? HttpStatus.BAD_REQUEST : HttpStatus.ACCEPTED;
     return response.status(status).json({
       error: data.error,
       statusCode: data.status_code,
