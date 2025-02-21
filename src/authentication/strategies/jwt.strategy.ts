@@ -44,13 +44,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     // Extract roles
     const roles: string[] = user.roles.map(role => role.name);
 
-
     let business_kyc: BusinessKyc
     let renter_kyc: RenterKyc
 
-    // if (user.kycs.includes(KycType.BUSINESS)) {
-    //   business_kyc = await this.businessKycRepository.findOne({ where: { user: { id: user.id } } })
-    // }
 
     if (roles && Array.isArray(roles) && roles.includes(KycType.BUSINESS)) {
       business_kyc = await this.businessKycRepository.findOne({ where: { user: { id: user.id } } })
@@ -61,10 +57,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       renter_kyc = await this.renterKycRepository.findOne({ where: { user: { id: user.id } } })
     }
 
-
     user.roles = undefined;
     user.password = undefined;
-
 
     // Construct the response
     const response: JsonResponse = {

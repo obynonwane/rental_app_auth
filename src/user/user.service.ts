@@ -175,6 +175,14 @@ export class UserService {
         };
       }
 
+      if (user.verified) {
+        return {
+          error: false,
+          status_code: HttpStatus.ACCEPTED,
+          message: 'your account is already verified continue to login',
+        };
+      }
+
       const token =
         await this.emailVerificationTokenService.updateCreateEmailverificationToken(
           userData.email,
