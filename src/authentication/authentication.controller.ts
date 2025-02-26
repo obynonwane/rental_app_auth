@@ -75,7 +75,7 @@ export class AuthenticationController {
       userData,
     );
 
-    return response.status(HttpStatus.ACCEPTED).json(token);
+    return response.status(token.statusCode).json(token);
   }
 
   @UseGuards(JwtAuthenticationGuard)

@@ -38,7 +38,7 @@ export class AuthenticationService {
     if (!user.data.verified) {
       return {
         error: true,
-        statusCode: HttpStatus.BAD_REQUEST,
+        statusCode: HttpStatus.UNAUTHORIZED,
         message: 'email not verified, please verify your email',
         data: {}
       }
@@ -50,7 +50,7 @@ export class AuthenticationService {
     const token = this.jwtService.sign(payload);
     return {
       error: false,
-      statusCode: 200,
+      statusCode: HttpStatus.ACCEPTED,
       message: 'logged-in successfully',
       data: {
         access_token: token,
