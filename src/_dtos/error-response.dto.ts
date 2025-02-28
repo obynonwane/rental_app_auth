@@ -1,7 +1,7 @@
 // error-response.dto.ts
 export interface ErrorResponseDTO {
     error: boolean;
-    statusCode: number;
+    status_code: number;
     message: string;
     data: any;
 }

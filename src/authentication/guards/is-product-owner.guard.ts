@@ -12,7 +12,7 @@ export class IsProductOwnerGuard implements CanActivate {
             throw new HttpException(
                 {
                     error: true,
-                    statusCode: HttpStatus.FORBIDDEN,
+                    status_code: HttpStatus.FORBIDDEN,
                     message: 'User is not a participant',
                     data: {},
                 },

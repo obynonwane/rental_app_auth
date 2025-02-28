@@ -64,7 +64,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     const response: JsonResponse = {
       error: false,
       message: 'User details retrieved successfully',
-      statusCode: HttpStatus.OK,
+      status_code: HttpStatus.OK,
       data: {
         user,         // Include the original user object
         roles,        // Include the extracted roles array
