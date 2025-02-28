@@ -144,7 +144,6 @@ export class AuthenticationController {
   }
 
   @HttpCode(200)
-  @UseGuards(JwtAuthenticationGuard)
   @Get('countries')
   async getCountries(
     @Req() request: RequestWithUser,
@@ -155,7 +154,6 @@ export class AuthenticationController {
   }
 
   @HttpCode(200)
-  @UseGuards(JwtAuthenticationGuard)
   @Get('states')
   async getStates(@Req() request: RequestWithUser, @Res() response: Response) {
     const result = await this.authenticationService.getStates();
@@ -163,7 +161,6 @@ export class AuthenticationController {
   }
 
   @HttpCode(200)
-  @UseGuards(JwtAuthenticationGuard)
   @Get('lgas')
   async getLgas(@Req() request: RequestWithUser, @Res() response: Response) {
     const result = await this.authenticationService.getLgas();
@@ -171,7 +168,6 @@ export class AuthenticationController {
   }
 
   @HttpCode(200)
-  @UseGuards(JwtAuthenticationGuard)
   @Get('country/state/:id')
   async getCountryState(
     @Param('id') id: string,
@@ -183,7 +179,6 @@ export class AuthenticationController {
   }
 
   @HttpCode(200)
-  @UseGuards(JwtAuthenticationGuard)
   @Get('state/lgas/:id')
   async getStateLgas(
     @Param('id') id: string,
