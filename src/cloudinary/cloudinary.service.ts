@@ -39,7 +39,7 @@ export class CloudinaryService {
     }
 
 
-    async uploadRenterKyc(detail: RenterKycDto): Promise<UploadApiResponse | UploadApiErrorResponse | { error: boolean, statusCode: number, message: string, data: any }> {
+    async uploadRenterKyc(detail: RenterKycDto): Promise<UploadApiResponse | UploadApiErrorResponse | { error: boolean, status_code: number, message: string, data: any }> {
         try {
 
 
@@ -48,7 +48,7 @@ export class CloudinaryService {
             if (!country) {
                 return {
                     error: true,
-                    statusCode: HttpStatus.BAD_REQUEST,
+                    status_code: HttpStatus.BAD_REQUEST,
                     message: 'country selected do not exist',
                     data: {}
                 };
@@ -60,7 +60,7 @@ export class CloudinaryService {
             if (!state) {
                 return {
                     error: true,
-                    statusCode: HttpStatus.BAD_REQUEST,
+                    status_code: HttpStatus.BAD_REQUEST,
                     message: 'state selected do not belong to the country',
                     data: {},
                 };
@@ -72,7 +72,7 @@ export class CloudinaryService {
             if (!lga) {
                 return {
                     error: true,
-                    statusCode: HttpStatus.BAD_REQUEST,
+                    status_code: HttpStatus.BAD_REQUEST,
                     message: 'city (lga) selected do not belong to the state',
                     data: {},
                 };

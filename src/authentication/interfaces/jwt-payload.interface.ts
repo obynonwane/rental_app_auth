@@ -27,6 +27,6 @@ export interface Data {
 export interface JsonResponse {
   error: boolean;
   message: string;
-  statusCode: number;
+  status_code: number;
   data: Data;
 }

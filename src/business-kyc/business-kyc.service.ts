@@ -25,7 +25,7 @@ export class BusinessKycService {
 
 
 
-    public async createKyc(detail: BusinessKycDto, userId: string): Promise<ResponseDTO<BusinessKyc> | { error: boolean, statusCode: number, message: string, data: any }> {
+    public async createKyc(detail: BusinessKycDto, userId: string): Promise<ResponseDTO<BusinessKyc> | { error: boolean, status_code: number, message: string, data: any }> {
         try {
 
             // check  country 
@@ -33,7 +33,7 @@ export class BusinessKycService {
             if (!country) {
                 return {
                     error: true,
-                    statusCode: HttpStatus.BAD_REQUEST,
+                    status_code: HttpStatus.BAD_REQUEST,
                     message: 'country selected do not exist',
                     data: {}
                 };
@@ -45,7 +45,7 @@ export class BusinessKycService {
             if (!state) {
                 return {
                     error: true,
-                    statusCode: HttpStatus.BAD_REQUEST,
+                    status_code: HttpStatus.BAD_REQUEST,
                     message: 'state selected do not belong to the country',
                     data: {},
                 };
@@ -57,7 +57,7 @@ export class BusinessKycService {
             if (!lga) {
                 return {
                     error: true,
-                    statusCode: HttpStatus.BAD_REQUEST,
+                    status_code: HttpStatus.BAD_REQUEST,
                     message: 'city (lga) selected do not belong to the state',
                     data: {},
                 };
@@ -99,7 +99,7 @@ export class BusinessKycService {
 
                 return {
                     error: false,
-                    statusCode: 200,
+                    status_code: 200,
                     message: 'KYC created successfully',
                     data: this.formatKycResponse(theKyc),
                 };
@@ -109,7 +109,7 @@ export class BusinessKycService {
             console.log(error)
             const errorResponse: ErrorResponseDTO = {
                 error: true,
-                statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+                status_code: HttpStatus.INTERNAL_SERVER_ERROR,
                 message: 'Error creating KYC',
                 data: {},
             };

@@ -75,7 +75,9 @@ export class AuthenticationController {
       userData,
     );
 
-    return response.status(token.statusCode).json(token);
+    console.log(token)
+
+    return response.status(token.status_code).json(token);
   }
 
   @UseGuards(JwtAuthenticationGuard)
@@ -121,7 +123,7 @@ export class AuthenticationController {
   async logOut(@Req() request: RequestWithUser, @Res() response: Response) {
     return response.status(HttpStatus.ACCEPTED).json({
       status: true,
-      statusCode: 200,
+      status_code: 200,
       message: 'logged out successfully',
     });
   }
@@ -137,7 +139,7 @@ export class AuthenticationController {
       data.error == true ? HttpStatus.BAD_REQUEST : HttpStatus.ACCEPTED;
     return response.status(status).json({
       error: data.error,
-      statusCode: data.status_code,
+      status_code: data.status_code,
       message: data.message,
       data: data,
     });
@@ -247,7 +249,7 @@ export class AuthenticationController {
     // Process the file and data as needed
     return response.status(HttpStatus.ACCEPTED).json({
       error: false,
-      statusCode: 200,
+      status_code: 200,
       message: 'File and data received and processed',
       data: {
         data: targetPath,
@@ -265,7 +267,7 @@ export class AuthenticationController {
   ) {
     const userId = request.user['data']['user']['id'];
     const user = await this.authenticationService.kycBusiness(userData, userId);
-    return response.status(user.statusCode).json(user);
+    return response.status(user.status_code).json(user);
   }
 
   @HttpCode(200)
@@ -279,7 +281,7 @@ export class AuthenticationController {
       await this.authenticationService.retriveIdentificationTypes();
     return response.status(HttpStatus.ACCEPTED).json({
       error: false,
-      statusCode: 200,
+      status_code: 200,
       message: 'Identification types retrived sucessfully',
       data: {
         data: result,
@@ -297,7 +299,7 @@ export class AuthenticationController {
     const result = await this.authenticationService.retriveUserTypes();
     return response.status(HttpStatus.ACCEPTED).json({
       error: false,
-      statusCode: 200,
+      status_code: 200,
       message: 'user types retrieved sucessfully',
       data: {
         data: result,
@@ -316,9 +318,9 @@ export class AuthenticationController {
       userData,
     );
 
-    const res = response.status(result.statusCode).json({
+    const res = response.status(result.status_code).json({
       error: result.error,
-      statusCode: result.statusCode,
+      status_code: result.status_code,
       message: result.message,
       data: result.data
     });
@@ -337,9 +339,9 @@ export class AuthenticationController {
     const result = await this.authenticationService.changePassword(
       userData,
     );
-    return response.status(result.statusCode).json({
+    return response.status(result.status_code).json({
       error: result.error,
-      statusCode: result.statusCode,
+      status_code: result.status_code,
       message: result.message,
       data: result.data
     });

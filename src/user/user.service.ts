@@ -63,7 +63,7 @@ export class UserService {
 
       return {
         error: false,
-        statusCode: HttpStatus.OK,
+        status_code: HttpStatus.OK,
         message: 'user detail retrived succesfully',
         data: user,
       };
@@ -71,7 +71,7 @@ export class UserService {
       throw new CustomHttpException(
         'wrong credentials provided',
         HttpStatus.BAD_REQUEST,
-        { statusCode: HttpStatus.BAD_REQUEST, error: true },
+        { status_code: HttpStatus.BAD_REQUEST, error: true },
       );
     }
   }
@@ -89,14 +89,14 @@ export class UserService {
         throw new CustomHttpException(
           'wrong credentials provided',
           HttpStatus.BAD_REQUEST,
-          { statusCode: HttpStatus.BAD_REQUEST, error: true },
+          { status_code: HttpStatus.BAD_REQUEST, error: true },
         );
       }
     } catch (error) {
       throw new CustomHttpException(
         'error logging in user',
         HttpStatus.INTERNAL_SERVER_ERROR,
-        { statusCode: HttpStatus.INTERNAL_SERVER_ERROR, error: true },
+        { status_code: HttpStatus.INTERNAL_SERVER_ERROR, error: true },
       );
     }
   }
@@ -150,13 +150,13 @@ export class UserService {
         throw new CustomHttpException(
           'user email already exist',
           HttpStatus.BAD_REQUEST,
-          { statusCode: HttpStatus.BAD_REQUEST, error: true },
+          { status_code: HttpStatus.BAD_REQUEST, error: true },
         );
       }
       throw new CustomHttpException(
         'error creating user',
         HttpStatus.INTERNAL_SERVER_ERROR,
-        { statusCode: HttpStatus.INTERNAL_SERVER_ERROR, error: true },
+        { status_code: HttpStatus.INTERNAL_SERVER_ERROR, error: true },
       );
     }
   }
@@ -214,7 +214,7 @@ export class UserService {
       throw new CustomHttpException(
         'error sending verification email',
         HttpStatus.INTERNAL_SERVER_ERROR,
-        { statusCode: HttpStatus.INTERNAL_SERVER_ERROR, error: true },
+        { status_code: HttpStatus.INTERNAL_SERVER_ERROR, error: true },
       );
     }
   }
@@ -260,7 +260,7 @@ export class UserService {
 
       return {
         error: false,
-        statusCode: HttpStatus.ACCEPTED,
+        status_code: HttpStatus.ACCEPTED,
         message: 'user account created',
       };
     } catch (error) {
@@ -268,13 +268,13 @@ export class UserService {
         throw new CustomHttpException(
           'user email already exist',
           HttpStatus.BAD_REQUEST,
-          { statusCode: HttpStatus.BAD_REQUEST, error: true },
+          { status_code: HttpStatus.BAD_REQUEST, error: true },
         );
       }
       throw new CustomHttpException(
         'error creating user',
         HttpStatus.INTERNAL_SERVER_ERROR,
-        { statusCode: HttpStatus.INTERNAL_SERVER_ERROR, error: true },
+        { status_code: HttpStatus.INTERNAL_SERVER_ERROR, error: true },
       );
     }
   }
@@ -292,7 +292,7 @@ export class UserService {
       throw new CustomHttpException(
         'error hasing password',
         HttpStatus.INTERNAL_SERVER_ERROR,
-        { statusCode: HttpStatus.INTERNAL_SERVER_ERROR, error: true },
+        { status_code: HttpStatus.INTERNAL_SERVER_ERROR, error: true },
       );
     }
   }
@@ -310,7 +310,7 @@ export class UserService {
       throw new CustomHttpException(
         'user with this id does not exist',
         HttpStatus.NOT_FOUND,
-        { statusCode: HttpStatus.NOT_FOUND, error: true },
+        { status_code: HttpStatus.NOT_FOUND, error: true },
       );
     }
 
@@ -339,7 +339,7 @@ export class UserService {
       throw new CustomHttpException(
         `roled select not found`,
         HttpStatus.BAD_REQUEST,
-        { statusCode: HttpStatus.BAD_REQUEST, error: true },
+        { status_code: HttpStatus.BAD_REQUEST, error: true },
       );
     }
 
@@ -352,7 +352,7 @@ export class UserService {
     if (!user) {
       // throw new Error('User not found');
       throw new CustomHttpException(`user not found`, HttpStatus.NOT_FOUND, {
-        statusCode: HttpStatus.NOT_FOUND,
+        status_code: HttpStatus.NOT_FOUND,
         error: true,
       });
     }
@@ -367,7 +367,7 @@ export class UserService {
 
       // throw new Error(`User already has the role: ${role.name}`);
       throw new CustomHttpException(`role not found`, HttpStatus.NOT_FOUND, {
-        statusCode: HttpStatus.NOT_FOUND,
+        status_code: HttpStatus.NOT_FOUND,
         error: true,
       });
     }
@@ -382,7 +382,7 @@ export class UserService {
       throw new CustomHttpException(
         `User already has the role: ${role.name}`,
         HttpStatus.INTERNAL_SERVER_ERROR,
-        { statusCode: HttpStatus.INTERNAL_SERVER_ERROR, error: true },
+        { status_code: HttpStatus.INTERNAL_SERVER_ERROR, error: true },
       );
     }
 
@@ -404,7 +404,7 @@ export class UserService {
       throw new CustomHttpException(
         'User does not have permission to create staff',
         HttpStatus.FORBIDDEN,
-        { statusCode: HttpStatus.FORBIDDEN, error: true },
+        { status_code: HttpStatus.FORBIDDEN, error: true },
       );
     }
 
@@ -420,7 +420,7 @@ export class UserService {
           throw new CustomHttpException(
             'A user with this email already exists',
             HttpStatus.CONFLICT,
-            { statusCode: HttpStatus.BAD_REQUEST, error: true },
+            { status_code: HttpStatus.BAD_REQUEST, error: true },
           );
         }
 
@@ -433,7 +433,7 @@ export class UserService {
           throw new CustomHttpException(
             'A user with this phone number already exists',
             HttpStatus.CONFLICT,
-            { statusCode: HttpStatus.BAD_REQUEST, error: true },
+            { status_code: HttpStatus.BAD_REQUEST, error: true },
           );
         }
 
@@ -457,7 +457,7 @@ export class UserService {
           throw new CustomHttpException(
             'Role "participant_staff" not found',
             HttpStatus.NOT_FOUND,
-            { statusCode: HttpStatus.NOT_FOUND, error: true },
+            { status_code: HttpStatus.NOT_FOUND, error: true },
           );
         }
 
@@ -485,7 +485,7 @@ export class UserService {
           throw new CustomHttpException(
             'user creating staff not found',
             HttpStatus.NOT_FOUND,
-            { statusCode: HttpStatus.NOT_FOUND, error: true },
+            { status_code: HttpStatus.NOT_FOUND, error: true },
           );
         }
 
@@ -512,7 +512,7 @@ export class UserService {
     );
     return {
       error: false,
-      statusCode: HttpStatus.CREATED,
+      status_code: HttpStatus.CREATED,
       message:
         'Staff user created and associated successfully, emails have been sent to the user',
     };
@@ -522,7 +522,7 @@ export class UserService {
     const response: JsonResponse = {
       error: false,
       message: 'countries retrived succesfully',
-      statusCode: HttpStatus.OK,
+      status_code: HttpStatus.OK,
       data: await this.countryRepository.find(),
     };
     return response;
@@ -531,7 +531,7 @@ export class UserService {
     const response: JsonResponse = {
       error: false,
       message: 'states retrived succesfully',
-      statusCode: HttpStatus.OK,
+      status_code: HttpStatus.OK,
       data: await this.stateRepository.find(),
     };
     return response;
@@ -541,7 +541,7 @@ export class UserService {
     const response: JsonResponse = {
       error: false,
       message: 'lgas retrived succesfully',
-      statusCode: HttpStatus.OK,
+      status_code: HttpStatus.OK,
       data: await this.lgaRepository.find(),
     };
     return response;
@@ -550,7 +550,7 @@ export class UserService {
     const response: JsonResponse = {
       error: false,
       message: 'country states retrived succesfully',
-      statusCode: HttpStatus.OK,
+      status_code: HttpStatus.OK,
       data: await this.stateRepository.find({ where: { country: { id: id } } }),
     };
     return response;
@@ -560,7 +560,7 @@ export class UserService {
     const response: JsonResponse = {
       error: false,
       message: 'state lgas retrived succesfully',
-      statusCode: HttpStatus.OK,
+      status_code: HttpStatus.OK,
       data: await this.lgaRepository.find({ where: { state: { id: id } } }),
     };
     return response;
@@ -576,7 +576,7 @@ export class UserService {
         const response: JsonResponse = {
           error: true,
           message: 'email supplied cannot be found',
-          statusCode: HttpStatus.BAD_REQUEST,
+          status_code: HttpStatus.BAD_REQUEST,
           data: null
         };
         return response;
@@ -606,7 +606,7 @@ export class UserService {
       const response: JsonResponse = {
         error: false,
         message: 'reset password email sent',
-        statusCode: HttpStatus.ACCEPTED,
+        status_code: HttpStatus.ACCEPTED,
         data: null
       };
       return response;
@@ -615,7 +615,7 @@ export class UserService {
       throw new CustomHttpException(
         'error sending reset password email',
         HttpStatus.BAD_REQUEST,
-        { statusCode: HttpStatus.BAD_REQUEST, error: true },
+        { status_code: HttpStatus.BAD_REQUEST, error: true },
       );
     }
   }
@@ -629,7 +629,7 @@ export class UserService {
         const response: JsonResponse = {
           error: true,
           message: 'token supplied cannot be found',
-          statusCode: HttpStatus.BAD_REQUEST,
+          status_code: HttpStatus.BAD_REQUEST,
           data: null
         };
         return response;
@@ -639,7 +639,7 @@ export class UserService {
         const response: JsonResponse = {
           error: true,
           message: 'token already expired',
-          statusCode: HttpStatus.BAD_REQUEST,
+          status_code: HttpStatus.BAD_REQUEST,
           data: null
         };
         return response;
@@ -652,7 +652,7 @@ export class UserService {
         const response: JsonResponse = {
           error: true,
           message: 'user not found',
-          statusCode: HttpStatus.BAD_REQUEST,
+          status_code: HttpStatus.BAD_REQUEST,
           data: null
         };
         return response;
@@ -668,7 +668,7 @@ export class UserService {
       const response: JsonResponse = {
         error: false,
         message: 'user password changed succesfully',
-        statusCode: HttpStatus.ACCEPTED,
+        status_code: HttpStatus.ACCEPTED,
         data: null
       };
       return response;
@@ -677,7 +677,7 @@ export class UserService {
       throw new CustomHttpException(
         'error changing user password',
         HttpStatus.BAD_REQUEST,
-        { statusCode: HttpStatus.BAD_REQUEST, error: true },
+        { status_code: HttpStatus.BAD_REQUEST, error: true },
       );
     }
   }
