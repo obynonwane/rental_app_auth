@@ -184,7 +184,6 @@ export class AuthenticationController {
   @Get('state/lgas/:id')
   async getStateLgas(
     @Param('id') id: string,
-    @Req() request: RequestWithUser,
     @Res() response: Response,
   ) {
     const result = await this.authenticationService.getStateLgas(id);
