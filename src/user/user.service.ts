@@ -196,7 +196,7 @@ export class UserService {
         last_name: user.last_name,
         verified: user.verified,
         verification_link:
-          `${process.env.ROOT_URL}` + '?token=' + `${token.token}`,
+          `${process.env.ROOT_URL}` + 'verify-email?token=' + `${token.token}`,
       };
 
       //send email verification mail - rabbitmq
