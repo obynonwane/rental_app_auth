@@ -11,6 +11,9 @@ class Lga {
     @Column({ nullable: true })
     public name: string;
 
+    @Column({ nullable: true })
+    public lga_slug: string;
+
     @ManyToOne(() => State, state => state.lgas, { onDelete: 'CASCADE' }) // Many lgas can belong to one state
     @JoinColumn({ name: 'state_id' })
     public state: State;
