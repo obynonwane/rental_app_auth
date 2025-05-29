@@ -10,7 +10,10 @@ class State {
     public id: string;
 
     @Column({ nullable: true })
-    public name: string;    
+    public name: string;
+
+    @Column({ nullable: true })
+    public state_slug: string;
 
     @ManyToOne(() => Country, country => country.states, { onDelete: 'CASCADE' }) // Many states can belong to one country
     @JoinColumn({ name: 'country_id' })
