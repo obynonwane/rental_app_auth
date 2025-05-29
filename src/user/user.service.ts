@@ -523,7 +523,7 @@ export class UserService {
       error: false,
       message: 'countries retrived succesfully',
       status_code: HttpStatus.OK,
-      data: await this.countryRepository.find(),
+      data: await this.countryRepository.find({ relations: ['states', 'states.lgas'] }),
     };
     return response;
   }

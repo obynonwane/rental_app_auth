@@ -19,8 +19,10 @@ class State {
     @JoinColumn({ name: 'country_id' })
     public country: Country;
 
+    // @OneToMany(() => Lga, lga => lga.state)
+    // public lgas: Lga[];
     @OneToMany(() => Lga, lga => lga.state)
-    public lgas: Lga[];
+    lgas: Lga[];
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
     public created_at: Date;
