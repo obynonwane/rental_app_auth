@@ -18,8 +18,7 @@ class Lga {
     @JoinColumn({ name: 'state_id' })
     public state: State;
 
-    // @ManyToOne(() => State, state => state.lgas)
-    // state: State;
+
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
     public created_at: Date;
