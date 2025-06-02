@@ -1,11 +1,14 @@
+import AccountType from '../account-type/account-type.entity';
 import Role from '../role/role.entity';
 
 import {
   Column,
   Entity,
   Index,
+  JoinColumn,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -48,6 +51,13 @@ class User {
 
   @Column("varchar", { array: true, nullable: true })
   public kycs: string[];
+
+  @ManyToOne(() => AccountType, (accountType) => accountType.users, { eager: true, nullable: false })
+  @JoinColumn({ name: 'account_type_id' })
+  public accountType: AccountType;
+
+  @Column()
+  public first_time_login: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
   public created_at: Date;
