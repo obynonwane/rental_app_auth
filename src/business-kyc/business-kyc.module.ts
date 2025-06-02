@@ -6,13 +6,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import Country from '../country/country.entity';
 import State from '../state/state.entity';
 import Lga from '../lga/lga.entity';
+import User from '../user/user.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([
     BusinessKyc,
     Country,
     State,
-    Lga
+    Lga,
+    User
   ])],
   controllers: [BusinessKycController],
   providers: [BusinessKycService]

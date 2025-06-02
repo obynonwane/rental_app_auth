@@ -135,6 +135,12 @@ export class CloudinaryService {
                                      WHERE id = $3`,
                                     ["renter", "renter", detail.userId]
                                 );
+
+
+                                // update the first time login
+                                let theUser = await this.userRepository.findOne({ where: { id: detail.userId } })
+                                theUser.first_time_login = "no"
+                                await transactionalEntityManager.save(User, theUser);
                             }
 
                         })

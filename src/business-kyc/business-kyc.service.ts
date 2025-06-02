@@ -9,6 +9,7 @@ import { ErrorResponseDTO } from '../_dtos/error-response.dto';
 import Country from '../country/country.entity';
 import State from '../state/state.entity';
 import Lga from 'src/lga/lga.entity';
+import User from '../user/user.entity';
 
 @Injectable()
 export class BusinessKycService {
@@ -19,6 +20,9 @@ export class BusinessKycService {
         private countryRepository: Repository<Country>,
         @InjectRepository(State)
         private stateRepository: Repository<State>,
+
+        @InjectRepository(User)
+        private userRepository: Repository<User>,
         @InjectRepository(Lga)
         private lgaRepository: Repository<Lga>,
     ) { }
@@ -96,6 +100,11 @@ export class BusinessKycService {
                     where: { id: kyc.id },
                     relations: ['country', 'state', 'lga', 'user'],
                 });
+
+                // update the first time login
+                let theUser = await this.userRepository.findOne({ where: { id: userId } })
+                theUser.first_time_login = "no"
+                await transactionalEntityManager.save(User, theUser);
 
                 return {
                     error: false,
