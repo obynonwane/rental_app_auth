@@ -13,6 +13,7 @@ import State from '../state/state.entity';
 import Lga from '../lga/lga.entity';
 import { ResetPasswordTokenService } from '../reset-password-token/reset-password-token.service';
 import ResetPasswordToken from '../reset-password-token/reset-password-token.entity';
+import AccountType from '../account-type/account-type.entity';
 
 
 
@@ -40,7 +41,8 @@ import ResetPasswordToken from '../reset-password-token/reset-password-token.ent
       Country,
       State,
       Lga,
-      ResetPasswordToken
+      ResetPasswordToken,
+      AccountType
     ])],
   providers: [UserService, EmailVerificationTokenService, Utility, ResetPasswordTokenService]
 })

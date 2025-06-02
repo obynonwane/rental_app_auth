@@ -23,6 +23,8 @@ import { CreateStaffDto } from '../_dtos/create-staff.dto';
 import { ResetPasswordTokenService } from '../reset-password-token/reset-password-token.service';
 import ChangePasswordDto from '../_dtos/change-password.dto';
 import RequestPasswordVerificationEmailDto from '../_dtos/request-password-verification-email.dto';
+import AccountType from '../account-type/account-type.entity';
+
 
 @Injectable()
 export class UserService {
@@ -47,6 +49,9 @@ export class UserService {
 
     @InjectRepository(Lga)
     private lgaRepository: Repository<Lga>,
+
+    @InjectRepository(AccountType)
+    private accountTypeRepository: Repository<AccountType>,
 
     private emailVerificationTokenService: EmailVerificationTokenService,
 
@@ -103,14 +108,31 @@ export class UserService {
 
   public async create(userData: CreateUserDto) {
     try {
+
+      console.log(userData)
+      const accountTypeName = userData.is_business === 'true' ? 'business' : 'individual';
+      const accountType = await this.accountTypeRepository.findOne({ where: { name: accountTypeName } });
+
+      console.log(accountTypeName)
+      console.log(accountType)
+
+      if (!accountType) throw new CustomHttpException(
+        'account type not found',
+        HttpStatus.BAD_REQUEST,
+        { status_code: HttpStatus.BAD_REQUEST, error: true },
+      );
+
       const newUser = this.userRepository.create({
         first_name: userData.first_name,
         last_name: userData.last_name,
         email: userData.email,
         phone: userData.phone,
         password: await this.createPasswordHash(userData.password),
+        accountType: accountType
       });
       const user = await this.userRepository.save(newUser);
+
+
 
       const token =
         await this.emailVerificationTokenService.createEmailverificationToken(
