@@ -14,6 +14,8 @@ import Lga from '../lga/lga.entity';
 import { ResetPasswordTokenService } from '../reset-password-token/reset-password-token.service';
 import ResetPasswordToken from '../reset-password-token/reset-password-token.entity';
 import AccountType from '../account-type/account-type.entity';
+import { BusinessKyc } from '../business-kyc/business-kyc.entity';
+import { RenterKyc } from '../renter-kyc/renter-kyc.entity';
 
 
 
@@ -42,7 +44,9 @@ import AccountType from '../account-type/account-type.entity';
       State,
       Lga,
       ResetPasswordToken,
-      AccountType
+      AccountType,
+      BusinessKyc,
+      RenterKyc
     ])],
   providers: [UserService, EmailVerificationTokenService, Utility, ResetPasswordTokenService]
 })

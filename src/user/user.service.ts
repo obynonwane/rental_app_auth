@@ -1,4 +1,4 @@
-import { HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import User from './user.entity';
 import { EntityManager, Repository } from 'typeorm';
@@ -24,6 +24,9 @@ import { ResetPasswordTokenService } from '../reset-password-token/reset-passwor
 import ChangePasswordDto from '../_dtos/change-password.dto';
 import RequestPasswordVerificationEmailDto from '../_dtos/request-password-verification-email.dto';
 import AccountType from '../account-type/account-type.entity';
+import { BusinessKyc } from '../business-kyc/business-kyc.entity';
+import { RenterKyc } from '../renter-kyc/renter-kyc.entity';
+import { KycType } from '../_enums/kyc-types.enum';
 
 
 @Injectable()
@@ -53,10 +56,63 @@ export class UserService {
     @InjectRepository(AccountType)
     private accountTypeRepository: Repository<AccountType>,
 
+    @InjectRepository(BusinessKyc)
+    private businessKycRepository: Repository<BusinessKyc>,
+
+
+    @InjectRepository(RenterKyc)
+    private renterKycRepository: Repository<RenterKyc>,
+
     private emailVerificationTokenService: EmailVerificationTokenService,
 
     private resetPasswordTokenService: ResetPasswordTokenService,
   ) { }
+
+  async getUser(userId: string) {
+
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['roles'], // Load roles
+    });
+
+
+    console.log(user, "the user")
+
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    // Extract roles
+    const roles: string[] = user.roles.map(role => role.name);
+
+    let business_kyc: BusinessKyc
+    let renter_kyc: RenterKyc
+
+
+    if (roles && Array.isArray(roles) && roles.includes(KycType.BUSINESS)) {
+      business_kyc = await this.businessKycRepository.findOne({ where: { user: { id: user.id } } })
+    }
+
+
+    if (roles && Array.isArray(roles) && roles.includes(KycType.RENTER)) {
+      renter_kyc = await this.renterKycRepository.findOne({ where: { user: { id: user.id } } })
+    }
+
+    user.roles = undefined;
+    user.password = undefined;
+
+    return {
+      data: {
+        user,         // Include the original user object
+        roles,        // Include the extracted roles array
+        kyc_detail: {
+          renter_kyc,
+          business_kyc
+        }
+      }
+    }
+  }
+
 
   public async getByEmail(email: string, password: string) {
     try {

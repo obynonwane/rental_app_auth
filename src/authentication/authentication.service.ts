@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import CreateUserDto from 'src/_dtos/create-user.dto';
 import { JwtService } from '@nestjs/jwt';
@@ -48,15 +48,23 @@ export class AuthenticationService {
     // return user
     const payload: TokenPayload = { userId };
     const token = this.jwtService.sign(payload);
+
+    // return the user 
+
+
     return {
       error: false,
       status_code: HttpStatus.ACCEPTED,
       message: 'logged-in successfully',
       data: {
         access_token: token,
+        detail: (await this.userService.getUser(userId)).data
       },
     }
   }
+
+
+
 
   async createUser(userData: CreateUserDto) {
     return await this.userService.create(userData);
