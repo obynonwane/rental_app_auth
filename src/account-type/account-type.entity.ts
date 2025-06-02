@@ -1,10 +1,9 @@
 
 
-import User from '../user/user.entity';
 import { Column, Entity, Index, JoinTable, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity({ name: "acount_types" })
-class Role {
+class AccountType {
     @PrimaryGeneratedColumn("uuid")
     public id: string;
 
@@ -19,4 +18,4 @@ class Role {
     public updated_at: Date;
 }
 
-export default Role;
+export default AccountType;
