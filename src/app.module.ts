@@ -27,6 +27,8 @@ import { RenterKycModule } from './renter-kyc/renter-kyc.module';
 import { IdentityTypesModule } from './identity-types/identity-types.module';
 import { BusinessKycModule } from './business-kyc/business-kyc.module';
 import { ResetPasswordTokenModule } from './reset-password-token/reset-password-token.module';
+import { AccountTypeModule } from './account-type/account-type.module';
+
 
 
 
@@ -66,6 +68,8 @@ import { ResetPasswordTokenModule } from './reset-password-token/reset-password-
     IdentityTypesModule,
     BusinessKycModule,
     ResetPasswordTokenModule,
+    AccountTypeModule,
+
   ],
   controllers: [],
   providers: [],

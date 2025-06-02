@@ -8,6 +8,7 @@ export class CreateUserDto {
     name: string;
     password: string;
     role: string;
+    is_business: string;
 }
 
 
