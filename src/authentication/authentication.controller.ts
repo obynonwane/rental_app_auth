@@ -75,7 +75,7 @@ export class AuthenticationController {
       userData,
     );
 
-    console.log(token)
+
 
     return response.status(token.status_code).json(token);
   }
@@ -324,7 +324,7 @@ export class AuthenticationController {
       data: result.data
     });
 
-    console.log(res)
+
 
     return res
   }

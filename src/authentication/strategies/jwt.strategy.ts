@@ -32,6 +32,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(payload: JwtPayload): Promise<JsonResponse> {
     const { userId } = payload;
 
+    console.log("GOT HERE WHAT DO YOU THINK")
     const user = await this.userRepository.findOne({
       where: { id: userId },
       relations: ['roles'], // Load roles
@@ -44,18 +45,22 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     // Extract roles
     const roles: string[] = user.roles.map(role => role.name);
 
+
     let business_kyc: BusinessKyc
     let renter_kyc: RenterKyc
 
 
-    if (roles && Array.isArray(roles) && roles.includes(KycType.BUSINESS)) {
+    if (roles && Array.isArray(roles) && roles.includes('participant')) {
       business_kyc = await this.businessKycRepository.findOne({ where: { user: { id: user.id } } })
+
     }
 
 
-    if (roles && Array.isArray(roles) && roles.includes(KycType.RENTER)) {
+    if (roles && Array.isArray(roles) && roles.includes('participant')) {
       renter_kyc = await this.renterKycRepository.findOne({ where: { user: { id: user.id } } })
     }
+
+
 
     user.roles = undefined;
     user.password = undefined;
@@ -75,6 +80,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       }
     };
 
+
+    console.log(response.data.kyc_detail)
 
     // Return the new response
     return response;

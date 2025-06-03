@@ -76,8 +76,6 @@ export class UserService {
     });
 
 
-    console.log(user, "the user")
-
     if (!user) {
       throw new UnauthorizedException();
     }
@@ -89,12 +87,13 @@ export class UserService {
     let renter_kyc: RenterKyc
 
 
-    if (roles && Array.isArray(roles) && roles.includes(KycType.BUSINESS)) {
+
+    if (roles && Array.isArray(roles) && roles.includes('participant')) {
       business_kyc = await this.businessKycRepository.findOne({ where: { user: { id: user.id } } })
+
     }
 
-
-    if (roles && Array.isArray(roles) && roles.includes(KycType.RENTER)) {
+    if (roles && Array.isArray(roles) && roles.includes('participant')) {
       renter_kyc = await this.renterKycRepository.findOne({ where: { user: { id: user.id } } })
     }
 
@@ -165,12 +164,11 @@ export class UserService {
   public async create(userData: CreateUserDto) {
     try {
 
-      console.log(userData)
+
       const accountTypeName = userData.is_business === 'true' ? 'business' : 'individual';
       const accountType = await this.accountTypeRepository.findOne({ where: { name: accountTypeName } });
 
-      console.log(accountTypeName)
-      console.log(accountType)
+
 
       if (!accountType) throw new CustomHttpException(
         'account type not found',
@@ -376,7 +374,7 @@ export class UserService {
   }
 
   public async getById(id: string) {
-    console.log('this is the method');
+
 
     // Retrieve the user from the database, including roles
     const user = await this.userRepository.findOne({
@@ -547,7 +545,7 @@ export class UserService {
             (existingRole) => existingRole.id === productOwnerStaffRole.id,
           );
           if (!hasRole) {
-            console.log(productOwnerStaffRole, 'the user role');
+
             staffUser.roles.push(productOwnerStaffRole);
           }
         }

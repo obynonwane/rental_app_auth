@@ -115,7 +115,7 @@ export class BusinessKycService {
             });
         } catch (error) {
 
-            console.log(error)
+
             const errorResponse: ErrorResponseDTO = {
                 error: true,
                 status_code: HttpStatus.INTERNAL_SERVER_ERROR,
