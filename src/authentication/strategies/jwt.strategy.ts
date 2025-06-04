@@ -32,7 +32,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(payload: JwtPayload): Promise<JsonResponse> {
     const { userId } = payload;
 
-    console.log("GOT HERE WHAT DO YOU THINK")
+
     const user = await this.userRepository.findOne({
       where: { id: userId },
       relations: ['roles'], // Load roles

@@ -201,6 +201,16 @@ export class AuthenticationController {
     @Res() response: Response,
   ) {
     const userId = request.user['data']['user']['id'];
+    const kycs = request.user['data']['kyc_detail'];
+
+
+    if (kycs['business_kyc'] !== null && kycs['business_kyc'] !== undefined) {
+      return response.status(HttpStatus.BAD_REQUEST).json({
+        error: true,
+        status_code: HttpStatus.BAD_REQUEST,
+        message: 'error: business kyc already done - individual kyc cannot be done ',
+      });
+    }
 
     // Access additional form fields
     const address = body.address;
@@ -243,6 +253,7 @@ export class AuthenticationController {
       userId,
     };
 
+    // check if the user already have individual kyc
     await this.authenticationService.kycRenter(details);
 
     // Process the file and data as needed
@@ -265,6 +276,18 @@ export class AuthenticationController {
     @Res() response: Response,
   ) {
     const userId = request.user['data']['user']['id'];
+
+    const kycs = request.user['data']['kyc_detail'];
+
+
+    if (kycs['renter_kyc'] !== null && kycs['renter_kyc'] !== undefined) {
+      return response.status(HttpStatus.BAD_REQUEST).json({
+        error: true,
+        status_code: HttpStatus.BAD_REQUEST,
+        message: 'error: individual kyc already done - business kyc cannot be done ',
+      });
+    }
+
     const user = await this.authenticationService.kycBusiness(userData, userId);
     return response.status(user.status_code).json(user);
   }
