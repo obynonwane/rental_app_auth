@@ -288,6 +288,15 @@ export class AuthenticationController {
       });
     }
 
+    if (kycs['business_kyc'] !== null && kycs['business_kyc'] !== undefined) {
+      return response.status(HttpStatus.BAD_REQUEST).json({
+        error: true,
+        status_code: HttpStatus.BAD_REQUEST,
+        message: 'error: kyc already done ',
+      });
+    }
+
+
     const user = await this.authenticationService.kycBusiness(userData, userId);
     return response.status(user.status_code).json(user);
   }
