@@ -108,7 +108,7 @@ export class BusinessKycService {
 
                 return {
                     error: false,
-                    status_code: 200,
+                    status_code: HttpStatus.ACCEPTED,
                     message: 'KYC created successfully',
                     data: this.formatKycResponse(theKyc),
                 };
