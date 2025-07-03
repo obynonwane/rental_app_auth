@@ -85,7 +85,29 @@ export class BusinessKycService {
 
             }
 
+            // check if the org_url exist
+            const orgurl = await this.businessKycRepository.findOne({ where: { subdomain: detail.subdomain } })
+            if (orgurl) {
+                return {
+                    error: true,
+                    status_code: HttpStatus.BAD_REQUEST,
+                    message: 'business with url exist',
+                    data: {},
+                };
 
+            }
+
+
+
+            const validdomain = this.validateSubdomain(detail.subdomain)
+            if (validdomain.valid == false) {
+                return {
+                    error: true,
+                    status_code: HttpStatus.BAD_REQUEST,
+                    message: validdomain.message,
+                    data: {},
+                };
+            }
 
             const entityManager = this.businessKycRepository.manager;
 
@@ -102,8 +124,11 @@ export class BusinessKycService {
                     key_bonus: detail.key_bonus,
                     description: detail.description,
                     plan: plan,
-                    active_plan: true
+                    active_plan: true,
+                    subdomain: detail.subdomain.toLowerCase(),
                 });
+
+
 
                 await transactionalEntityManager.save(BusinessKyc, kyc);
 
@@ -147,6 +172,41 @@ export class BusinessKycService {
             throw new HttpException(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+    /**
+ * Checks if a subdomain is valid:
+ * - Only a-z, 0-9, -
+ * - 3 to 63 characters
+ * - Not reserved
+ */
+    public validateSubdomain(subdomain: string): {
+        valid: boolean;
+        message?: string;
+    } {
+        const allowedPattern = /^[a-z0-9\-]+$/;
+
+        if (!subdomain) {
+            return { valid: false, message: 'Subdomain is required.' };
+        }
+
+        if (subdomain.length < 3 || subdomain.length > 20) {
+            return { valid: false, message: 'Subdomain must be between 3 and 20 characters.' };
+        }
+
+        if (!allowedPattern.test(subdomain)) {
+            return { valid: false, message: 'Subdomain can only contain lowercase letters, numbers, and hyphens.' };
+        }
+
+        const reserved = ['www', 'api', 'admin', 'mail', 'support', 'lendora', 'dev', 'staging', 'live', 'production', 'product', 'service'];
+
+        if (reserved.includes(subdomain.toLowerCase())) {
+            return { valid: false, message: 'This subdomain is reserved and cannot be used.' };
+        }
+
+        return { valid: true };
+    }
+
 
     private formatKycResponse(kyc: BusinessKyc) {
         // Format the response object to include full details of related entities

@@ -29,6 +29,9 @@ export class BusinessKyc {
     @Column({ type: 'varchar' })
     key_bonus: string;
 
+    @Column({ type: 'varchar' })
+    subdomain: string;
+
     @Column({
         type: 'enum',
         enum: BusinessRegisteredEnum,
