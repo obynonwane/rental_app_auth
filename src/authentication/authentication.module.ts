@@ -30,6 +30,7 @@ import { BusinessKyc } from '../business-kyc/business-kyc.entity';
 import { ResetPasswordTokenService } from '../reset-password-token/reset-password-token.service';
 import ResetPasswordToken from '../reset-password-token/reset-password-token.entity';
 import AccountType from '../account-type/account-type.entity';
+import { Plan } from '../plan/plan.entity';
 @Global()
 @Module({
   imports: [
@@ -72,7 +73,8 @@ import AccountType from '../account-type/account-type.entity';
       RenterKyc,
       BusinessKyc,
       ResetPasswordToken,
-      AccountType
+      AccountType,
+      Plan
     ])
   ],
   providers: [

@@ -8,8 +8,9 @@ import { ResponseDTO } from '../_dtos/response.dto';
 import { ErrorResponseDTO } from '../_dtos/error-response.dto';
 import Country from '../country/country.entity';
 import State from '../state/state.entity';
-import Lga from 'src/lga/lga.entity';
+import Lga from '../lga/lga.entity';
 import User from '../user/user.entity';
+import { Plan } from '../plan/plan.entity';
 
 @Injectable()
 export class BusinessKycService {
@@ -25,6 +26,9 @@ export class BusinessKycService {
         private userRepository: Repository<User>,
         @InjectRepository(Lga)
         private lgaRepository: Repository<Lga>,
+
+        @InjectRepository(Plan)
+        private planRepository: Repository<Plan>,
     ) { }
 
 
@@ -69,6 +73,19 @@ export class BusinessKycService {
             }
 
 
+            // check  lga
+            const plan = await this.planRepository.findOne({ where: { name: "free" } })
+            if (!plan) {
+                return {
+                    error: true,
+                    status_code: HttpStatus.BAD_REQUEST,
+                    message: 'plan not found',
+                    data: {},
+                };
+
+            }
+
+
 
             const entityManager = this.businessKycRepository.manager;
 
@@ -82,6 +99,10 @@ export class BusinessKycService {
                     country: { id: detail.address_country },
                     state: { id: detail.address_state },
                     lga: { id: detail.address_lga },
+                    key_bonus: detail.key_bonus,
+                    description: detail.description,
+                    plan: plan,
+                    active_plan: true
                 });
 
                 await transactionalEntityManager.save(BusinessKyc, kyc);

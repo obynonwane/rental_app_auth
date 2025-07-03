@@ -7,6 +7,7 @@ import Country from '../country/country.entity';
 import State from '../state/state.entity';
 import Lga from '../lga/lga.entity';
 import User from '../user/user.entity';
+import { Plan } from '../plan/plan.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([
@@ -14,7 +15,8 @@ import User from '../user/user.entity';
     Country,
     State,
     Lga,
-    User
+    User,
+    Plan
   ])],
   controllers: [BusinessKycController],
   providers: [BusinessKycService]

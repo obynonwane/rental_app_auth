@@ -219,7 +219,7 @@ export class UserService {
       return {
         error: false,
         status_code: HttpStatus.ACCEPTED,
-        message: 'user account created',
+        message: 'user account created, check your email',
       };
     } catch (error) {
       if (error?.code == PostgresErrorCode.UniqueViolation) {
@@ -337,7 +337,7 @@ export class UserService {
       return {
         error: false,
         status_code: HttpStatus.ACCEPTED,
-        message: 'user account created',
+        message: 'user account created, check your email',
       };
     } catch (error) {
       if (error?.code == PostgresErrorCode.UniqueViolation) {

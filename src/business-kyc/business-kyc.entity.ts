@@ -1,9 +1,10 @@
-import Country from 'src/country/country.entity';
-import State from 'src/state/state.entity';
-import User from 'src/user/user.entity';
+import Country from '../country/country.entity';
+import State from '../state/state.entity';
+import User from '../user/user.entity';
 import { Entity, PrimaryGeneratedColumn, Column, UpdateDateColumn, ManyToOne, JoinColumn, OneToOne, Unique } from 'typeorm';
-import Lga from 'src/lga/lga.entity';
+import Lga from '../lga/lga.entity';
 import { BusinessRegisteredEnum } from './enums/business-registered.enum';
+import { Plan } from '../plan/plan.entity';
 
 
 @Entity({ name: 'business_kycs' })
@@ -21,6 +22,12 @@ export class BusinessKyc {
 
     @Column({ type: 'varchar' })
     display_name: string;
+
+    @Column({ type: 'varchar' })
+    description: string;
+
+    @Column({ type: 'varchar' })
+    key_bonus: string;
 
     @Column({
         type: 'enum',
@@ -45,8 +52,15 @@ export class BusinessKyc {
     @JoinColumn({ name: 'lga_id' })
     lga: Lga;
 
+    @ManyToOne(() => Plan, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'plan_id' })
+    plan: Plan;
+
     @Column({ default: false })
     public verified: boolean;
+
+    @Column({ default: false })
+    active_plan: boolean;
 
     @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)', onUpdate: 'CURRENT_TIMESTAMP(6)' })
     public updated_at: Date;
