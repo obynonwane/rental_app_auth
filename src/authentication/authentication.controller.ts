@@ -321,6 +321,23 @@ export class AuthenticationController {
   }
 
   @HttpCode(200)
+  @Get('retrieve-industries')
+  async retriveIdustries(
+    @Res() response: Response,
+  ) {
+    const result =
+      await this.authenticationService.retriveIndustries();
+    return response.status(HttpStatus.ACCEPTED).json({
+      error: false,
+      status_code: 200,
+      message: 'Industries retrived sucessfully',
+      data: {
+        data: result,
+      },
+    });
+  }
+
+  @HttpCode(200)
   @UseGuards(JwtAuthenticationGuard)
   @Get('list-user-type')
   async listUserTypes(
