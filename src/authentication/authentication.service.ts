@@ -19,11 +19,13 @@ import { CreateStaffDto } from '../_dtos/create-staff.dto';
 import ResetPasswordEmailDto from '../_dtos/reset-password-email.dto';
 import ChangePasswordDto from '../_dtos/change-password.dto';
 import RequestPasswordVerificationEmailDto from '../_dtos/request-password-verification-email.dto';
+import { IndustryService } from '../industry/industry.service';
 
 @Injectable()
 export class AuthenticationService {
   constructor(
     private userService: UserService,
+    private industryService: IndustryService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private cloudinaryService: CloudinaryService,
@@ -122,6 +124,10 @@ export class AuthenticationService {
 
   public async retriveIdentificationTypes() {
     return await this.identityTypesService.getAll();
+  }
+
+  public async retriveIndustries() {
+    return await this.industryService.getAll();
   }
 
   public async kycBusiness(detail: BusinessKycDto, userId: string) {

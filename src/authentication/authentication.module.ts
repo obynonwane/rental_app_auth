@@ -31,6 +31,8 @@ import { ResetPasswordTokenService } from '../reset-password-token/reset-passwor
 import ResetPasswordToken from '../reset-password-token/reset-password-token.entity';
 import AccountType from '../account-type/account-type.entity';
 import { Plan } from '../plan/plan.entity';
+import { IndustryService } from '../industry/industry.service';
+import Industry from '../industry/industry.entity';
 @Global()
 @Module({
   imports: [
@@ -74,7 +76,8 @@ import { Plan } from '../plan/plan.entity';
       BusinessKyc,
       ResetPasswordToken,
       AccountType,
-      Plan
+      Plan,
+      Industry
     ])
   ],
   providers: [
@@ -87,7 +90,8 @@ import { Plan } from '../plan/plan.entity';
     RenterKycService,
     IdentityTypesService,
     BusinessKycService,
-    ResetPasswordTokenService
+    ResetPasswordTokenService,
+    IndustryService
   ],
   controllers: [AuthenticationController],
   exports: [JwtStrategy, PassportModule],

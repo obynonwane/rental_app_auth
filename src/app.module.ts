@@ -29,6 +29,7 @@ import { BusinessKycModule } from './business-kyc/business-kyc.module';
 import { ResetPasswordTokenModule } from './reset-password-token/reset-password-token.module';
 import { AccountTypeModule } from './account-type/account-type.module';
 import { PlanModule } from './plan/plan.module';
+import { IndustryModule } from './industry/industry.module';
 
 
 
@@ -71,6 +72,7 @@ import { PlanModule } from './plan/plan.module';
     ResetPasswordTokenModule,
     AccountTypeModule,
     PlanModule,
+    IndustryModule,
 
   ],
   controllers: [],
