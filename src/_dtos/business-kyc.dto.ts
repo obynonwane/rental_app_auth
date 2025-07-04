@@ -9,6 +9,7 @@ export class BusinessKycDto {
   address_lga: string;
   address_street: string;
   subdomain: string;
+  industries: string;
 }
 
 export default BusinessKycDto;

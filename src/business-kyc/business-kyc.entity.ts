@@ -32,6 +32,9 @@ export class BusinessKyc {
     @Column({ type: 'varchar' })
     subdomain: string;
 
+    @Column({ type: 'text' })
+    industries: string;
+
     @Column({
         type: 'enum',
         enum: BusinessRegisteredEnum,
