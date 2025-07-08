@@ -608,7 +608,7 @@ export class UserService {
       error: false,
       message: 'states retrived succesfully',
       status_code: HttpStatus.OK,
-      data: await this.stateRepository.find(),
+      data: await this.stateRepository.find({ relations: ['lgas'] }),
     };
     return response;
   }
