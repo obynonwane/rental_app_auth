@@ -59,6 +59,9 @@ class User {
   @Column()
   public first_time_login: string;
 
+  @Column()
+  public profile_img: string;
+
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
   public created_at: Date;
 

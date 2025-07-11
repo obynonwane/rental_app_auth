@@ -1,3 +1,4 @@
+import { RenterKyc } from 'src/renter-kyc/renter-kyc.entity';
 import { BusinessKyc } from '../business-kyc/business-kyc.entity';
 import {
     Entity,
@@ -24,6 +25,9 @@ export class Plan {
 
     @OneToMany(() => BusinessKyc, (kyc) => kyc.plan)
     businessKycs: BusinessKyc[];
+
+    @OneToMany(() => RenterKyc, (kyc) => kyc.plan)
+    renterKycs: RenterKyc[];
 
     @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
     public created_at: Date;
