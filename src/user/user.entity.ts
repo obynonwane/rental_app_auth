@@ -1,3 +1,4 @@
+import SavedInventory from '../saved-inventory/saved-inventory.entity';
 import AccountType from '../account-type/account-type.entity';
 import Role from '../role/role.entity';
 
@@ -9,6 +10,7 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -61,6 +63,10 @@ class User {
 
   @Column()
   public profile_img: string;
+
+  // One account type can be assigned to many users
+  @OneToMany(() => SavedInventory, (savedInventory) => savedInventory.user, { eager: true })
+  saved_inventories: SavedInventory[];
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
   public created_at: Date;
