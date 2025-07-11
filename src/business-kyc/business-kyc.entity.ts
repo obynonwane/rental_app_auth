@@ -35,6 +35,9 @@ export class BusinessKyc {
     @Column({ type: 'text' })
     industries: string;
 
+    @Column({ type: 'text' })
+    shop_banner: string;
+
     @Column({
         type: 'enum',
         enum: BusinessRegisteredEnum,
@@ -58,7 +61,7 @@ export class BusinessKyc {
     @JoinColumn({ name: 'lga_id' })
     lga: Lga;
 
-    @ManyToOne(() => Plan, { onDelete: 'CASCADE' })
+    @ManyToOne(() => Plan, { onDelete: 'CASCADE', eager: true })
     @JoinColumn({ name: 'plan_id' })
     plan: Plan;
 
