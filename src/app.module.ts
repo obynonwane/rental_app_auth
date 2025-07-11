@@ -30,6 +30,7 @@ import { ResetPasswordTokenModule } from './reset-password-token/reset-password-
 import { AccountTypeModule } from './account-type/account-type.module';
 import { PlanModule } from './plan/plan.module';
 import { IndustryModule } from './industry/industry.module';
+import { SavedInventoryModule } from './saved-inventory/saved-inventory.module';
 
 
 
@@ -73,6 +74,7 @@ import { IndustryModule } from './industry/industry.module';
     AccountTypeModule,
     PlanModule,
     IndustryModule,
+    SavedInventoryModule,
 
   ],
   controllers: [],

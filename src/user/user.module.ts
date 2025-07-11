@@ -16,6 +16,7 @@ import ResetPasswordToken from '../reset-password-token/reset-password-token.ent
 import AccountType from '../account-type/account-type.entity';
 import { BusinessKyc } from '../business-kyc/business-kyc.entity';
 import { RenterKyc } from '../renter-kyc/renter-kyc.entity';
+import SavedInventory from '../saved-inventory/saved-inventory.entity';
 
 
 
@@ -46,7 +47,8 @@ import { RenterKyc } from '../renter-kyc/renter-kyc.entity';
       ResetPasswordToken,
       AccountType,
       BusinessKyc,
-      RenterKyc
+      RenterKyc,
+      SavedInventory
     ])],
   providers: [UserService, EmailVerificationTokenService, Utility, ResetPasswordTokenService]
 })
