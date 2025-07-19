@@ -35,6 +35,8 @@ import { SavedInventoryModule } from './saved-inventory/saved-inventory.module';
 
 
 
+
+
 @Module({
   imports: [
     PrometheusModule.register(),
@@ -75,7 +77,6 @@ import { SavedInventoryModule } from './saved-inventory/saved-inventory.module';
     PlanModule,
     IndustryModule,
     SavedInventoryModule,
-
   ],
   controllers: [],
   providers: [],

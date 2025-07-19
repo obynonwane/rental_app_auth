@@ -11,9 +11,7 @@ class AccountType {
     @Column({ nullable: false })
     public name: string;
 
-
-    // One account type can be assigned to many users
-    @OneToMany(() => User, (user) => user.accountType)
+    @ManyToMany(() => User, (u) => u.accountTypes)
     users: User[];
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })

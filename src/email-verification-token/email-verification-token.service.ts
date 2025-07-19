@@ -62,8 +62,13 @@ export class EmailVerificationTokenService {
                 }
             }
 
+            console.log(tokenEntity)
             // check if token created at is above 1 hour
             if (tokenEntity?.created_at) {
+                console.log("Token Created At (UTC):", new Date(tokenEntity.created_at).toISOString());
+                console.log("One Hour Ago (UTC):", new Date(Date.now() - 60 * 60 * 1000).toISOString());
+                console.log("Now (UTC):", new Date().toISOString());
+
                 const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000); // 1 hour ago
 
                 if (new Date(tokenEntity.created_at) < oneHourAgo) {
