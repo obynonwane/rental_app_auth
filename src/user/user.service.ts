@@ -27,6 +27,7 @@ import AccountType from '../account-type/account-type.entity';
 import { BusinessKyc } from '../business-kyc/business-kyc.entity';
 import { RenterKyc } from '../renter-kyc/renter-kyc.entity';
 import { KycType } from '../_enums/kyc-types.enum';
+import { Utility } from '../utilities/utility';
 
 
 @Injectable()
@@ -66,6 +67,8 @@ export class UserService {
     private emailVerificationTokenService: EmailVerificationTokenService,
 
     private resetPasswordTokenService: ResetPasswordTokenService,
+
+    private utilities: Utility,
   ) { }
 
   async getUser(userId: string) {
@@ -176,13 +179,16 @@ export class UserService {
         { status_code: HttpStatus.BAD_REQUEST, error: true },
       );
 
+
+      const userSlug = await this.utilities.generateUniqueSlug(userData.first_name, userData.last_name)
       const newUser = this.userRepository.create({
         first_name: userData.first_name,
         last_name: userData.last_name,
         email: userData.email,
         phone: userData.phone,
         password: await this.createPasswordHash(userData.password),
-        accountType: accountType
+        accountType: accountType,
+        user_slug: userSlug
       });
       const user = await this.userRepository.save(newUser);
 
