@@ -68,6 +68,9 @@ class User {
   @OneToMany(() => SavedInventory, (savedInventory) => savedInventory.user, { eager: true })
   saved_inventories: SavedInventory[];
 
+  @Column({ nullable: true, unique: true })
+  user_slug?: string;
+
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
   public created_at: Date;
 
