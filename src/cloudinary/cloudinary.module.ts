@@ -14,7 +14,7 @@ import State from '../state/state.entity';
     User,
     Country,
     State,
-    Lga
+    Lga,
   ])],
   controllers: [CloudinaryController],
   providers: [CloudinaryService]

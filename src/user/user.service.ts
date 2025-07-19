@@ -187,7 +187,7 @@ export class UserService {
         email: userData.email,
         phone: userData.phone,
         password: await this.createPasswordHash(userData.password),
-        accountType: accountType,
+        accountTypes: [accountType],
         user_slug: userSlug
       });
       const user = await this.userRepository.save(newUser);

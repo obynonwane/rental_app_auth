@@ -11,6 +11,7 @@ import Country from '../country/country.entity';
 import State from '../state/state.entity';
 import Lga from '../lga/lga.entity';
 
+
 @Injectable()
 export class CloudinaryService {
 
@@ -29,6 +30,8 @@ export class CloudinaryService {
 
         @InjectRepository(Lga)
         private lgaRepository: Repository<Lga>,
+
+
     ) {
         // Initialize Cloudinary with your credentials
         cloudinary.config({
@@ -80,6 +83,8 @@ export class CloudinaryService {
             }
 
 
+
+
             return new Promise((resolve, reject) => {
                 const storagePath = detail.targetPath // Ensure the correct path
 
@@ -123,6 +128,8 @@ export class CloudinaryService {
                                     state: { id: detail.addressState },
                                     lga: { id: detail.addressLga },
                                 });
+
+
 
                                 // save the kyc details
                                 await transactionalEntityManager.save(RenterKyc, kyc);

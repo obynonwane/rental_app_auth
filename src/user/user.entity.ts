@@ -54,9 +54,9 @@ class User {
   @Column("varchar", { array: true, nullable: true })
   public kycs: string[];
 
-  @ManyToOne(() => AccountType, (accountType) => accountType.users, { eager: true, nullable: false })
-  @JoinColumn({ name: 'account_type_id' })
-  public accountType: AccountType;
+  // @ManyToOne(() => AccountType, (accountType) => accountType.users, { eager: true, nullable: false })
+  // @JoinColumn({ name: 'account_type_id' })
+  // public accountType: AccountType;
 
   @Column()
   public first_time_login: string;
@@ -70,6 +70,16 @@ class User {
 
   @Column({ nullable: true, unique: true })
   user_slug?: string;
+
+
+
+  @ManyToMany(() => AccountType, (at) => at.users, { eager: true })
+  @JoinTable({
+    name: 'user_account_types',               // join table name
+    joinColumn: { name: 'user_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'account_type_id', referencedColumnName: 'id' },
+  })
+  accountTypes: AccountType[];
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
   public created_at: Date;
