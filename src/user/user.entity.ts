@@ -54,9 +54,6 @@ class User {
   @Column("varchar", { array: true, nullable: true })
   public kycs: string[];
 
-  // @ManyToOne(() => AccountType, (accountType) => accountType.users, { eager: true, nullable: false })
-  // @JoinColumn({ name: 'account_type_id' })
-  // public accountType: AccountType;
 
   @Column()
   public first_time_login: string;
