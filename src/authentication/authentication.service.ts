@@ -20,6 +20,7 @@ import ResetPasswordEmailDto from '../_dtos/reset-password-email.dto';
 import ChangePasswordDto from '../_dtos/change-password.dto';
 import RequestPasswordVerificationEmailDto from '../_dtos/request-password-verification-email.dto';
 import { IndustryService } from '../industry/industry.service';
+import SubdomainExistDto from 'src/_dtos/subdomain-exist.dto';
 
 @Injectable()
 export class AuthenticationService {
@@ -132,6 +133,9 @@ export class AuthenticationService {
 
   public async kycBusiness(detail: BusinessKycDto, userId: string) {
     return await this.businessKycService.createKyc(detail, userId);
+  }
+  public async subdomainExist(detail: SubdomainExistDto) {
+    return await this.businessKycService.subdomainExist(detail.subdomain)
   }
 
   public async retriveUserTypes() {

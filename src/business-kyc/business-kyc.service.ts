@@ -32,6 +32,28 @@ export class BusinessKycService {
     ) { }
 
 
+    public async subdomainExist(subdomain: string) {
+        // check  country 
+        const subD = await this.businessKycRepository.findOne({ where: { subdomain: subdomain } })
+        if (subD) {
+            return {
+                error: true,
+                status_code: HttpStatus.BAD_REQUEST,
+                message: 'subdomain already exist',
+                data: {}
+            };
+
+        }
+
+
+        return {
+            error: false,
+            status_code: HttpStatus.ACCEPTED,
+            message: 'subdomain available for usage',
+            data: {}
+        };
+
+    }
 
     public async createKyc(detail: BusinessKycDto, userId: string): Promise<ResponseDTO<BusinessKyc> | { error: boolean, status_code: number, message: string, data: any }> {
         try {
