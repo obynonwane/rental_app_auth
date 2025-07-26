@@ -37,6 +37,7 @@ import { IsProductOwnerGuard } from './guards/is-product-owner.guard';
 import { ResetPasswordEmailDto } from '../_dtos/reset-password-email.dto';
 import { ChangePasswordDto } from '../_dtos/change-password.dto';
 import { RequestPasswordVerificationEmailDto } from '../_dtos/request-password-verification-email.dto';
+import SubdomainExistDto from '../_dtos/subdomain-exist.dto';
 
 //
 @Controller('authentication')
@@ -298,6 +299,17 @@ export class AuthenticationController {
 
 
     const user = await this.authenticationService.kycBusiness(userData, userId);
+    return response.status(user.status_code).json(user);
+  }
+
+  @HttpCode(201)
+  @Post('subdomain-exist')
+  async subdomainExist(
+    @Body() userData: SubdomainExistDto,
+    @Req() request: RequestWithUser,
+    @Res() response: Response,
+  ) {
+    const user = await this.authenticationService.subdomainExist(userData);
     return response.status(user.status_code).json(user);
   }
 
