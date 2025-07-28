@@ -146,7 +146,7 @@ export class BusinessKycService {
                     key_bonus: detail.key_bonus,
                     description: detail.description,
                     plan: plan,
-                    active_plan: true,
+                    active_plan: false,
                     subdomain: detail.subdomain.toLowerCase(),
                     industries: detail.industries
                 });
