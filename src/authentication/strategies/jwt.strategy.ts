@@ -81,7 +81,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     };
 
 
-    console.log(response.data.kyc_detail)
+    // console.log(response.data.kyc_detail)
 
     // Return the new response
     return response;
