@@ -17,6 +17,9 @@ import AccountType from '../account-type/account-type.entity';
 import { BusinessKyc } from '../business-kyc/business-kyc.entity';
 import { RenterKyc } from '../renter-kyc/renter-kyc.entity';
 import SavedInventory from '../saved-inventory/saved-inventory.entity';
+import { UserSubscription } from '../user-subscription/user-subscription.entity';
+import { Plan } from '../plan/plan.entity';
+import { UserSubscriptionHistory } from '../user-subscription-history/user-subscription-history.entity';
 
 
 
@@ -48,7 +51,10 @@ import SavedInventory from '../saved-inventory/saved-inventory.entity';
       AccountType,
       BusinessKyc,
       RenterKyc,
-      SavedInventory
+      SavedInventory,
+      UserSubscription,
+      Plan,
+      UserSubscriptionHistory
     ])],
   providers: [UserService, EmailVerificationTokenService, Utility, ResetPasswordTokenService]
 })

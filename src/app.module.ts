@@ -31,6 +31,8 @@ import { AccountTypeModule } from './account-type/account-type.module';
 import { PlanModule } from './plan/plan.module';
 import { IndustryModule } from './industry/industry.module';
 import { SavedInventoryModule } from './saved-inventory/saved-inventory.module';
+import { UserSubscriptionModule } from './user-subscription/user-subscription.module';
+import { UserSubscriptionHistoryModule } from './user-subscription-history/user-subscription-history.module';
 
 
 
@@ -77,6 +79,8 @@ import { SavedInventoryModule } from './saved-inventory/saved-inventory.module';
     PlanModule,
     IndustryModule,
     SavedInventoryModule,
+    UserSubscriptionModule,
+    UserSubscriptionHistoryModule,
   ],
   controllers: [],
   providers: [],

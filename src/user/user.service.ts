@@ -28,6 +28,11 @@ import { BusinessKyc } from '../business-kyc/business-kyc.entity';
 import { RenterKyc } from '../renter-kyc/renter-kyc.entity';
 import { KycType } from '../_enums/kyc-types.enum';
 import { Utility } from '../utilities/utility';
+import { UserSubscription } from '../user-subscription/user-subscription.entity';
+import { Plan } from '../plan/plan.entity';
+import { BillingCycleEnum } from './dtos/billing-cycle.dto';
+import { PlanTypePostingCountEnum } from './dtos/plan.dto';
+import { UserSubscriptionHistory } from '../user-subscription-history/user-subscription-history.entity';
 
 
 @Injectable()
@@ -64,6 +69,16 @@ export class UserService {
     @InjectRepository(RenterKyc)
     private renterKycRepository: Repository<RenterKyc>,
 
+
+    @InjectRepository(UserSubscription)
+    private userSubscriptionRepository: Repository<UserSubscription>,
+
+    @InjectRepository(UserSubscriptionHistory)
+    private userSubscriptionHistoryRepository: Repository<UserSubscriptionHistory>,
+
+    @InjectRepository(Plan)
+    private planRepository: Repository<Plan>,
+
     private emailVerificationTokenService: EmailVerificationTokenService,
 
     private resetPasswordTokenService: ResetPasswordTokenService,
@@ -75,7 +90,7 @@ export class UserService {
 
     const user = await this.userRepository.findOne({
       where: { id: userId },
-      relations: ['roles'], // Load roles
+      relations: ['roles', 'userSubscription'], // Load roles
     });
 
 
@@ -164,6 +179,23 @@ export class UserService {
     }
   }
 
+
+  public async ComputeFreeSubscriptionDates() {
+    const startDate = new Date();
+    // Create a new date for endDate so we don't mutate startDate
+    const endDate = new Date(startDate);
+    endDate.setMonth(endDate.getMonth() + 1);
+
+    // Calculate number of days between the two dates
+    const diffInTime = endDate.getTime() - startDate.getTime();
+    const numberOfDays = Math.ceil(diffInTime / (1000 * 60 * 60 * 24));
+
+    return {
+      startDate,
+      endDate,
+      numberOfDays
+    }
+  }
   public async create(userData: CreateUserDto) {
     try {
 
@@ -192,6 +224,47 @@ export class UserService {
       });
       const user = await this.userRepository.save(newUser);
 
+
+
+      // create basic subscription for user
+      const plan = await this.planRepository.findOne({ where: { name: "free" } })
+      const freeSubDetail = await this.ComputeFreeSubscriptionDates()
+      const recRef = `rec-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`
+      const refRef = `rec-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`
+
+      const userDefaultSubscription = this.userSubscriptionRepository.create({
+        user: user,
+        plan: plan,
+        billing_cycle: BillingCycleEnum.MONTHLY,
+        receipt_number: recRef,
+        reference: refRef,
+        start_date: freeSubDetail.startDate,
+        end_date: freeSubDetail.endDate,
+        number_of_days: freeSubDetail.numberOfDays,
+        available_postings: PlanTypePostingCountEnum.FREE_COUNT,
+        amount: plan.monthly_price,
+        subscription_canceled: false
+      });
+      await this.userSubscriptionRepository.save(userDefaultSubscription);
+
+
+      // update subscription histories
+      const subscriptionHistory = this.userSubscriptionHistoryRepository.create(
+        {
+          user: user,
+          plan: plan,
+          billing_cycle: BillingCycleEnum.MONTHLY,
+          receipt_number: recRef,
+          reference: refRef,
+          start_date: freeSubDetail.startDate,
+          end_date: freeSubDetail.endDate,
+          number_of_days: freeSubDetail.numberOfDays,
+          available_postings: PlanTypePostingCountEnum.FREE_COUNT,
+          amount: plan.monthly_price,
+        }
+      )
+
+      await this.userSubscriptionHistoryRepository.save(subscriptionHistory)
 
 
       const token =

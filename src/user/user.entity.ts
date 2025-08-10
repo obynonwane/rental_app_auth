@@ -1,6 +1,8 @@
 import SavedInventory from '../saved-inventory/saved-inventory.entity';
 import AccountType from '../account-type/account-type.entity';
 import Role from '../role/role.entity';
+import { UserSubscription } from '../user-subscription/user-subscription.entity';
+import { UserSubscriptionHistory } from '../user-subscription-history/user-subscription-history.entity';
 
 import {
   Column,
@@ -11,6 +13,7 @@ import {
   ManyToMany,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -77,6 +80,12 @@ class User {
     inverseJoinColumn: { name: 'account_type_id', referencedColumnName: 'id' },
   })
   accountTypes: AccountType[];
+
+  @OneToOne(() => UserSubscription, (subscription) => subscription.user, { nullable: true })
+  userSubscription?: UserSubscription; // no @JoinColumn here
+
+  @OneToMany(() => UserSubscriptionHistory, (userSubscriptionHistory) => userSubscriptionHistory.user)
+  userSubscriptionHistories: UserSubscriptionHistory[];
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
   public created_at: Date;

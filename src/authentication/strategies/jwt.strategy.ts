@@ -35,7 +35,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
     const user = await this.userRepository.findOne({
       where: { id: userId },
-      relations: ['roles', 'accountTypes'], // Load roles
+      relations: ['roles', 'accountTypes', 'userSubscription'], // Load roles
     });
 
     if (!user) {
