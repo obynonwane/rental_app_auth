@@ -6,6 +6,8 @@ import IdentityType from "./src/identity-types/identity-types.entity";
 import ResetPasswordToken from "./src/reset-password-token/reset-password-token.entity";
 import AccountType from "./src/account-type/account-type.entity";
 import { Plan } from "./src/plan/plan.entity";
+import { UserSubscriptionHistory } from './src/user-subscription-history/user-subscription-history.entity';
+import { UserSubscription } from "./src/user-subscription/user-subscription.entity";
 
 
 
@@ -17,6 +19,8 @@ export const entities = [
     IdentityType,
     ResetPasswordToken,
     AccountType,
-    Plan
+    Plan,
+    UserSubscriptionHistory,
+    UserSubscription
 
 ]; 

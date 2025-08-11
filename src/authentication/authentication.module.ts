@@ -33,6 +33,8 @@ import AccountType from '../account-type/account-type.entity';
 import { Plan } from '../plan/plan.entity';
 import { IndustryService } from '../industry/industry.service';
 import Industry from '../industry/industry.entity';
+import { UserSubscription } from '../user-subscription/user-subscription.entity';
+import { UserSubscriptionHistory } from '../user-subscription-history/user-subscription-history.entity';
 @Global()
 @Module({
   imports: [
@@ -77,7 +79,9 @@ import Industry from '../industry/industry.entity';
       ResetPasswordToken,
       AccountType,
       Plan,
-      Industry
+      Industry,
+      UserSubscription,
+      UserSubscriptionHistory
     ])
   ],
   providers: [
