@@ -35,6 +35,7 @@ import { IndustryService } from '../industry/industry.service';
 import Industry from '../industry/industry.entity';
 import { UserSubscription } from '../user-subscription/user-subscription.entity';
 import { UserSubscriptionHistory } from '../user-subscription-history/user-subscription-history.entity';
+import { QueueModule } from '../queue/queue.module';
 @Global()
 @Module({
   imports: [
@@ -65,6 +66,7 @@ import { UserSubscriptionHistory } from '../user-subscription-history/user-subsc
         },
       }),
     }),
+    QueueModule,
     TypeOrmModule.forFeature([
       User,
       EmailVerificationToken,

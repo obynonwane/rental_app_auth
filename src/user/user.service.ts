@@ -12,6 +12,8 @@ import { EmailVerificationTokenService } from '../email-verification-token/email
 import CreateUserRoleDto from '../_dtos/create-role.dto';
 import Role from '../role/role.entity';
 
+import { InjectQueue } from '@nestjs/bull';
+import { Queue } from 'bull';
 import { JsonResponse } from './respose-interface';
 import { UserType, UserTypeArray } from '../_enums/user-type.enum';
 import ParticipantStaff from '../participant-staff/participant-staff.entity';
@@ -84,6 +86,9 @@ export class UserService {
     private resetPasswordTokenService: ResetPasswordTokenService,
 
     private utilities: Utility,
+
+    @InjectQueue('freemium-subscriptions')
+    private readonly freemiumCreationQueue: Queue,
   ) { }
 
   async getUser(userId: string) {
@@ -227,46 +232,7 @@ export class UserService {
 
 
       // create basic subscription for user
-      const plan = await this.planRepository.findOne({ where: { name: "free" } })
-      const freeSubDetail = await this.ComputeFreeSubscriptionDates()
-      const recRef = `rec-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`
-      const refRef = `rec-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`
-
-      const userDefaultSubscription = this.userSubscriptionRepository.create({
-        user: user,
-        plan: plan,
-        billing_cycle: BillingCycleEnum.MONTHLY,
-        receipt_number: recRef,
-        reference: refRef,
-        start_date: freeSubDetail.startDate,
-        end_date: freeSubDetail.endDate,
-        number_of_days: freeSubDetail.numberOfDays,
-        available_postings: PlanTypePostingCountEnum.FREE_COUNT,
-        amount: plan.monthly_price,
-        subscription_canceled: false
-      });
-      await this.userSubscriptionRepository.save(userDefaultSubscription);
-
-
-      // update subscription histories
-      const subscriptionHistory = this.userSubscriptionHistoryRepository.create(
-        {
-          user: user,
-          plan: plan,
-          billing_cycle: BillingCycleEnum.MONTHLY,
-          receipt_number: recRef,
-          reference: refRef,
-          start_date: freeSubDetail.startDate,
-          end_date: freeSubDetail.endDate,
-          number_of_days: freeSubDetail.numberOfDays,
-          available_postings: PlanTypePostingCountEnum.FREE_COUNT,
-          amount: plan.monthly_price,
-        }
-      )
-
-      await this.userSubscriptionHistoryRepository.save(subscriptionHistory)
-
-
+      await this.freemiumCreationQueue.add('create-freemium-subscription', { user });
       const token =
         await this.emailVerificationTokenService.createEmailverificationToken(
           userData.email,
