@@ -33,6 +33,7 @@ import { IndustryModule } from './industry/industry.module';
 import { SavedInventoryModule } from './saved-inventory/saved-inventory.module';
 import { UserSubscriptionModule } from './user-subscription/user-subscription.module';
 import { UserSubscriptionHistoryModule } from './user-subscription-history/user-subscription-history.module';
+import { QueueModule } from './queue/queue.module';
 
 
 
@@ -81,6 +82,7 @@ import { UserSubscriptionHistoryModule } from './user-subscription-history/user-
     SavedInventoryModule,
     UserSubscriptionModule,
     UserSubscriptionHistoryModule,
+    QueueModule,
   ],
   controllers: [],
   providers: [],

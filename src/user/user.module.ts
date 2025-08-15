@@ -20,6 +20,7 @@ import SavedInventory from '../saved-inventory/saved-inventory.entity';
 import { UserSubscription } from '../user-subscription/user-subscription.entity';
 import { Plan } from '../plan/plan.entity';
 import { UserSubscriptionHistory } from '../user-subscription-history/user-subscription-history.entity';
+import { QueueModule } from '../queue/queue.module';
 
 
 
@@ -39,6 +40,7 @@ import { UserSubscriptionHistory } from '../user-subscription-history/user-subsc
         },
       },
     ]),
+    QueueModule,
     TypeOrmModule.forFeature([
       User,
       EmailVerificationToken,
