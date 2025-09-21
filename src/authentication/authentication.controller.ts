@@ -100,6 +100,7 @@ export class AuthenticationController {
     @Res() response: Response,
   ) {
     const user = request.user;
+    console.log(user, "The User")
     return response.status(HttpStatus.ACCEPTED).json(user);
   }
 
